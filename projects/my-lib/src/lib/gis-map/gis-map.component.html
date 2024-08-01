@@ -1,0 +1,20 @@
+<div id="leafletMap" style="height: 400px; margin-bottom: 20px;"></div>
+
+<button type="button" (click)="pass()" class="btn btn-success">select Location</button>
+<div *ngIf="clickedLocation" class="location-details container">
+  <h3 class="mb-4">Clicked Location Details</h3>
+  <div class="row">
+    <div class="col-md-6">
+      <ul class="list-group mb-4">
+        <li class="list-group-item"><strong>Address:</strong> {{ clickedLocation.address }}</li>
+        <li class="list-group-item"><strong>Country:</strong> {{ clickedLocation.country }}</li>
+        <li class="list-group-item"><strong>State:</strong> {{ clickedLocation.state }}</li>
+        <li class="list-group-item"><strong>State District:</strong> {{ clickedLocation.state_district }}</li>
+        <li class="list-group-item"><strong>County:</strong> {{ clickedLocation.county }}</li>
+        <li class="list-group-item"><strong>Neighborhood:</strong> {{ clickedLocation.suburb }}</li>
+        <li class="list-group-item"><strong>Road:</strong> {{ clickedLocation.road }}</li>
+        <!-- <li class="list-group-item"><strong>Location Type:</strong> {{ clickedLocation.Location_type }}</li> -->
+      </ul>
+    </div>
+  </div>
+</div>

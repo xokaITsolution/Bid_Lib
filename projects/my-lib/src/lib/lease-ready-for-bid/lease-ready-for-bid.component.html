@@ -1,0 +1,192 @@
+<div class="card" style="max-width: 600px; margin: auto;">
+    <div class="card-header">
+      Lease Ready for Bid Form
+    </div>
+    <div class="card-body">
+      <form #leaseReadyForBidForm="ngForm" >
+        <div class="row">
+          <!-- <div class="col-md-6 mb-3">
+            <label for="rbidid" class="form-label">RBIDID</label>
+            <input type="number" class="form-control" id="rbidid" name="rbidid" [(ngModel)]="leaseReadyForBid.rbidid" required>
+          </div> -->
+          <div class="col-md-6 mb-3">
+            <label for="planID" class="form-label">Plan ID</label>
+            <input type="text" readonly (click)="displayplan=true" class="form-control" id="planID" name="planID" [(ngModel)]="Plan_No" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="titleDeedNo" class="form-label">Title Deed No</label>
+            <input readonly (click)="displayDeed=true" type="text" class="form-control" id="titleDeedNo" name="titleDeedNo" [(ngModel)]="leaseReadyForBid.title_Deed_No" required>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="noBidFloated" class="form-label">No Bid Floated</label>
+            <input type="number" class="form-control" id="noBidFloated" name="noBidFloated" [(ngModel)]="leaseReadyForBid.no_Bid_Floated" required>
+          </div>
+          <!-- <div class="col-md-6 mb-3">
+            <label for="certificateID" class="form-label">Certificate ID</label>
+            <input type="number" class="form-control" id="certificateID" name="certificateID" [(ngModel)]="leaseReadyForBid.certificate_ID" required>
+          </div> -->
+          <div class="col-md-6 mb-3">
+            <label for="date" class="form-label">Date</label>
+            <input type="date" class="form-control" id="date" name="date" [(ngModel)]="leaseReadyForBid.date" required>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <!-- <label for="isActive" class="form-label">Is Active</label> -->
+            <label  for="is_commerscial"  class=" col-form-label"  translate="">Is Active</label>
+            <div class="col-sm-9">
+  
+              <p-checkbox  [(ngModel)]="leaseReadyForBid.is_Active" name="isActive" id="isActive"
+              binary="true"></p-checkbox>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <!-- <div class="col-md-6 mb-3">
+            <label for="updatedBy" class="form-label">Updated By</label>
+            <input type="text" class="form-control" id="updatedBy" name="updatedBy" [(ngModel)]="leaseReadyForBid.updated_By">
+          </div> -->
+        </div>
+        <div class="row">
+          
+        </div>
+        <div style="float:left;">
+          <button [hidden]="isEdit" type="button" (click)="submitForm()" class="btn btn-success mr-1" 
+            translate>Save</button>
+            <button  [hidden]="!isEdit"  type="button" (click)="update()" class="btn btn-success mr-1" 
+            translate>Update</button>
+        </div>
+        <div style="float: right;">
+          <button (click)="done()" type="button" [disabled]="!isDone" class="btn btn-primary mr-1" 
+          translate>Done</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <div class="card mt-4">
+    
+    <div class="card-body">
+      <div style="float: right;">
+        <button  type="button" class="btn btn-primary mr-1" 
+          translate (click)="addNew()">Add New</button>
+      </div><br><br>
+      <p-table [value]="leaseReadyForBids" [paginator]="true" [rows]="5">
+        <ng-template pTemplate="header">
+          <tr>
+              <!-- <th>Plan ID</th> -->
+              <th>Title Deed No</th>
+              <th>Date</th>
+              <th>No Bid Floated</th>
+              <th>Is Active</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-bid let-rowData>
+          <tr (click)='highlighted = rowData;onRowSelect(bid)' class="some-class" tabindex="1"  [class.ui-state-highlight]="rowData === highlighted">
+            <!-- <td>{{ bid.year }}</td> -->
+            <td>{{ bid.title_Deed_No }}</td>
+            <!-- <td>{{ bid.certificate_ID }}</td> -->
+            <!-- <td>{{ bid.created_By }}</td> -->
+            <td>{{ bid.date  }}</td>
+            <!-- <td>{{ bid.updated_By }}</td>
+            <td>{{ bid.updated_Date | date }}</td> -->
+            <td>{{ bid.no_Bid_Floated }}</td>
+            <td>{{ bid.is_Active ? 'Yes' : 'No' }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+  <simple-notifications></simple-notifications>
+<p-dialog [(visible)]="displayplan" header="Select Plan" [responsive]="true" [style]="{width: '1100px'}" [minY]="70"
+  [maximizable]="true" [baseZIndex]="10000" [contentStyle]="{'overflow-y': 'auto', 'overflow-x': 'hidden', 'max-height': '80vh', 'min-height': '250px'}">
+  <div>
+    <div>
+      <div style="overflow: auto; max-height: 400px;">
+        <p-table [value]="yearlyBidPlans" [paginator]="true" [rows]="5">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Plan No</th>
+              <!-- <th>Year</th> -->
+              <th>Land Use</th>
+              <th>Bid Type</th>
+              <th>Building Use</th>
+              <th>Plot Quantity</th>
+              <!-- <th>Total Size of Plot</th> -->
+              <th>Bid Opening Date</th>
+              <th>Bid Start Date</th>
+              <th>Bid End Date</th>
+              <!-- <th>Prepared By</th>
+              <th>Approved By</th> -->
+              <th>Is Published</th>
+              <th>Min Bid Plot</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-plan let-rowData>
+            <tr (click)='highlighted = rowData;selectPlan(plan)' class="some-class" tabindex="1" [class.ui-state-highlight]="rowData === highlighted">
+              <td>{{ plan.plan_No }}</td>
+              <!-- <td>{{ plan.year }}</td> -->
+              <td>{{ plan.type_Of_Use }}</td>
+              <td>{{ plan.bid_Types }}</td>
+              <td>{{ plan.name }}</td>
+              <td>{{ plan.plot_Qty }}</td>
+              <!-- <td>{{ plan.total_Sizeof_plot }}</td> -->
+              <td>{{ plan.bid_Opning_Date | date }}</td>
+              <td>{{ plan.bid_Start_Date | date }}</td>
+              <td>{{ plan.bid_Enddate | date }}</td>
+              <!-- <td>{{ plan.prepared_by }}</td>
+              <td>{{ plan.approved_by }}</td> -->
+              <td>{{ plan.is_published ? 'Yes' : 'No' }}</td>
+              <td>{{ plan.min_bid_Plot }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+    <br><br><br><br>
+    <div style="float: right;">
+      <button (click)="displayplan=false" type="button" class="btn btn-primary mr-1" translate>Close</button>
+    </div>
+  </div>
+</p-dialog>
+
+<p-dialog [(visible)]="displayDeed" header="Select Deed" [responsive]="true" [style]="{'width': '1000px'}" [minY]="90"
+  [maximizable]="true" [baseZIndex]="10000" [contentStyle]="{'overflow-y': 'auto', 'overflow-x': 'auto', 'max-height': '80vh', 'min-height': '250px'}">
+  <div>
+    <div>
+      <div >
+        <p-table [value]="suspended" [paginator]="true" [rows]="5" [style]="{'width': '100%'}">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Name (En)</th>
+              <th>Full Name</th>
+              <th>Partner Full Name</th>
+              <th>Type of Use</th>
+              <th>Property Status</th>
+              <th>Property Type</th>
+              <th>Title Deed No</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-application let-rowData>
+            <tr (click)="highlighted = rowData; selectApplication(application)" class="some-class" tabindex="1" [class.ui-state-highlight]="rowData === highlighted">
+              <td style="word-break: break-word; min-width: 150px;">{{ application.name_En }}</td>
+              <td style="word-break: break-word; min-width: 150px;">{{ application.full_Name }}</td>
+              <td style="word-break: break-word; min-width: 150px;">{{ application.parnter_Full_Name }}</td>
+              <td style="word-break: break-word; min-width: 150px;">{{ application.typeOfuse }}</td>
+              <td style="word-break: break-word; min-width: 150px;">{{ application.property_Status }}</td>
+              <td style="word-break: break-word; min-width: 150px;">{{ application.property_Type }}</td>
+              <td style="word-break: break-word; min-width: 150px;">{{ application.title_Deed_No }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+    <br><br><br><br>
+    <div style="float: right;">
+      <button (click)="displayDeed=false" type="button" class="btn btn-primary mr-1" translate>Close</button>
+    </div>
+  </div>
+</p-dialog>
+

@@ -1,0 +1,40 @@
+.ui-state-highlight {
+    background:  rgb(13, 34, 75) !important;
+    color: white;
+  }
+  .custom-tree {
+    width: 500px; /* Set your desired width */
+  }
+  
+  .tree-container {
+    width: 500px; /* Set your desired width */
+  }
+  .input-group {
+    display: flex;
+    align-items: flex-start;
+  }
+  
+  .date-container {
+    width: 63%;
+    margin-right: -1px; /* To remove space between the inputs */
+  }
+  
+  .time-container {
+    width: 37%;
+  }
+  
+  .date-input, .time-input {
+    width: 100%;
+    box-sizing: border-box; /* Ensures padding and border are included in the width */
+  }
+  
+  .date-input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  
+  .time-input {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  

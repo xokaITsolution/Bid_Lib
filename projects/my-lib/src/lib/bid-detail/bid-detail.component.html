@@ -1,0 +1,160 @@
+<p-tabView  (onChange)="tabChanged($event)" [(activeIndex)]="selectedTab" selected="true">
+  <p-tabPanel header="Lease Bid">
+  <lib-lease-bid [license_service]="license_service" (next)="Next($event)"></lib-lease-bid>  
+ 
+  </p-tabPanel>
+  <p-tabPanel header="Bid Detail" [disabled]="true">
+    <div class="card" style="max-width: 600px; margin: auto;">
+      <div class="card-header">
+        Bid Detail Form
+      </div>
+      <div class="card-body">
+        <form #bidDetailForm="ngForm" >
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="bidNo" class="form-label">Bid No</label>
+              <input type="text" readonly class="form-control" id="bidNo" name="bidNo" [(ngModel)]="bidDetail.bid_No" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="titleDeedNo" class="form-label">Title Deed No</label>
+              <input type="text" readonly (click)="displayReadyLease=true" class="form-control" id="titleDeedNo" name="titleDeedNo" [(ngModel)]="bidDetail.title_Deed_No" required>
+            </div>
+          </div>
+          <div class="row">
+            <!-- <div class="col-md-6 mb-3">
+              <label for="certificateNo" class="form-label">Certificate No</label>
+              <input type="text" class="form-control" id="certificateNo" name="certificateNo" [(ngModel)]="bidDetail.certificate_No" required>
+            </div> -->
+            <div class="col-md-6 mb-3">
+              <label for="totalMinBidPrice" class="form-label">Total Min Bid Price</label>
+              <input type="number" class="form-control" id="totalMinBidPrice" name="totalMinBidPrice" [(ngModel)]="bidDetail.total_Min_Bid_Price" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="size" class="form-label">Size</label>
+              <input type="number" class="form-control" id="size" name="size" [(ngModel)]="bidDetail.size" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="bidder_Capacity_In_Birr" class="form-label">Bider Capacity In Birr</label>
+              <input type="number" class="form-control" id="bidder_Capacity_In_Birr" name="bidder_Capacity_In_Birr" [(ngModel)]="bidDetail.bidder_Capacity_In_Birr" required>
+            </div>
+          </div>
+          <div class="row"> 
+            <div class="col-md-12 mb-3">
+              <label for="location" class="form-label">Location</label>
+              <input type="text" readonly (click)="ismodaEnable=true;" class="form-control" id="location" name="location" [(ngModel)]="bidDetail.location" required>
+              <a href="javascript:void(0);" (click)="openGoogleMaps(bidDetail.location)" >
+                View On Google Map
+              </a>
+              
+            </div>
+          <div class="col-md-6 mb-3">
+          </div>
+          </div>
+          <button type="button" (click)="submitForm()" class="btn btn-success mx-3" [hidden]="isEdit">save</button>
+          <button type="button" class="btn btn-success mx-3" (click)="update()" [hidden]="!isEdit">update</button>
+          <div style="float: left;"> <button type="button" class="btn btn-primary mr-1" (click)="selectedTab = 0"
+            translate>previous</button>
+          </div>
+          <div style="float: right;">
+            <button (click)="done()" [disabled]="!isDone"  type="button" class="btn btn-primary mr-1" 
+              translate>Done</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+    
+    <div class="card mt-4">
+   
+      <div class="card-body">
+        <div style="float: right;">
+          <button  type="button" class="btn btn-primary mr-1" 
+            translate (click)="resetForm()">Add New</button>
+        </div><br><br>
+        <p-table [value]="bidDetails" [paginator]="true" [rows]="5">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Bid No</th>
+              <th>Title Deed No</th>
+              <!-- <th>Certificate No</th> -->
+              <th>Total Min Bid Price</th>
+              <th>Location</th>
+              <th>Size</th>
+              <th>Bider Capacity In Birr</th>
+              
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-bid let-rowData>
+            <tr (click)='highlighted = rowData;onRowSelect(bid)' class="some-class" tabindex="1" 
+             [class.ui-state-highlight]="rowData === highlighted">  <td>{{ bid.bid_No }}</td>
+             <td>{{ bid.title_Deed_No }}</td>
+             <!-- <td>{{ bid.certificate_No }}</td> -->
+             <td>{{ bid.total_Min_Bid_Price }}</td>
+             <td>{{ bid.location }}</td>
+             <td>{{ bid.size }}</td>
+             <td>{{ bid.bidder_Capacity_In_Birr }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+   
+   </p-tabPanel>
+  
+</p-tabView>
+<div class="ngxsmartmodal" *ngIf="ismodaEnable"  >
+  <div class="ngxsmartmodal-dialog" [style.max-width]="maxWidth" [style.max-height]="maxheight">
+    <div class="ngxsmartmodal-dialog-content" >
+      <div class="ngxsmartmodal-header">
+        <!-- Modal header content -->
+        <button type="button" class="close" (click)="ismodaEnable=false">&times;</button>
+      </div>
+   
+      <div class="ngxsmartmodal-body">
+        <lib-gis-map (PassLatLong)="acceptLatLong($event)"></lib-gis-map> 
+        
+
+      </div>
+   
+    
+    </div>
+  </div>
+</div>
+<p-dialog [(visible)]="displayReadyLease" header="Select Ready Lease" [responsive]="true" [width]="900" [minY]="70"
+[maximizable]="true" [baseZIndex]="10000" [contentStyle]="{'overflow-y': 'auto', 'overflow-x': 'hidden', 
+                      'max-height': '80vh','min-height':'250px'}">
+
+
+
+<div class="modal-body">
+  <p-table [value]="leaseReadyForBids" [paginator]="true" [rows]="5">
+    <ng-template pTemplate="header">
+      <tr>
+          <!-- <th>Plan ID</th> -->
+          <th>Title Deed No</th>
+          <th>Is Active</th>
+          <!-- <th>Date</th> -->
+          <th>No Bid Floated</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-bid let-rowData>
+      <tr (click)='highlighted = rowData;onSelectReadyLease(bid)' class="some-class" tabindex="1"  [class.ui-state-highlight]="rowData === highlighted">
+        <!-- <td>{{ bid.plan_ID }}</td> -->
+        <td>{{ bid.title_Deed_No }}</td>
+        <!-- <td>{{ bid.certificate_ID }}</td> -->
+        <td>{{ bid.is_Active ? 'Yes' : 'No' }}</td>
+        <!-- <td>{{ bid.created_By }}</td> -->
+        <!-- <td>{{ bid.date | date }}</td> -->
+        <!-- <td>{{ bid.updated_By }}</td>
+        <td>{{ bid.updated_Date | date }}</td> -->
+        <td>{{ bid.no_Bid_Floated }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+<br><br><br><br>
+  <div style="float: right;">
+    <button (click)="displayReadyLease=false" type="button"  class="btn btn-primary mr-1" 
+    translate>Close</button>
+  </div>
+</p-dialog>

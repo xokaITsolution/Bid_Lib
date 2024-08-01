@@ -1,0 +1,548 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~bootstrap/dist/css/bootstrap.min.css";
+@import "~primeng/resources/themes/nova-light/theme.css";
+@import "~primeng/resources/primeng.min.css";
+@import "~primeicons/primeicons.css";
+/* @import "~font-awesome/css/font-awesome.css";
+@import "~material-icons/iconfont/material-icons.css";
+@import "~@angular/material/prebuilt-themes/indigo-pink.css"; */
+@import "~leaflet/dist/leaflet.css";
+
+.browser-back-button {
+  display: none !important;
+}
+tr.green {
+  background-color: #09dd50 !important;
+  color: rgb(0, 0, 0) !important;
+  
+}
+tr.blue {
+  background-color: #1100ff !important;
+  color: rgb(255, 255, 255) !important;
+  
+}
+
+.nsm-content {
+  margin-top: 200px !important
+}
+.background-overlay-light{
+  position: relative !important;
+}
+.fade{
+  opacity: 1 !important;
+  background: rgba(0,0,0,.5);
+}
+.modal-dialog {
+  max-width: 1300px;
+  margin: 1.75rem auto;
+}
+
+tr.yelow {
+  background-color: #fffc3a !important;
+  color: rgb(0, 0, 0) !important;
+}
+tr.red {
+  background-color: #e60606 !important;
+  color: rgb(0, 0, 0) !important;
+}
+.btn:not(.btn-lg):not(.btn-sm) {
+  padding: 0.375rem 0.75rem !important;
+}
+element.style {
+  z-index: 0;
+}
+.background-overlay-light:before {
+  position: relative;
+}
+.calendars {
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #444;
+  -moz-border-radius: 0.25em;
+  -webkit-border-radius: 0.25em;
+  border-radius: 0.25em;
+  font-family: Arial, Helvetica, Sans-serif;
+  font-size: 90%;
+}
+
+.calendars-rtl {
+  direction: rtl;
+}
+
+.calendars-popup {
+  z-index: 1000;
+}
+
+.calendars-disable {
+  position: absolute;
+  z-index: 100;
+  background-color: white;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+}
+
+.calendars a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.calendars a.calendars-disabled {
+  color: #888;
+  cursor: auto;
+}
+
+.calendars button {
+  margin: 0.25em;
+  padding: 0.125em 0em;
+  background-color: #fcc;
+  border: none;
+  -moz-border-radius: 0.25em;
+  -webkit-border-radius: 0.25em;
+  border-radius: 0.25em;
+  font-weight: bold;
+}
+
+.calendars-nav,
+.calendars-ctrl {
+  float: left;
+  width: 100%;
+  background-color: #000;
+  color: #fff;
+  font-size: 90%;
+  font-weight: bold;
+}
+
+.calendars-ctrl {
+  background-color: #600;
+}
+
+.calendars-cmd {
+  width: 30%;
+}
+
+.calendars-cmd:hover {
+  background-color: #777;
+}
+
+.calendars-ctrl .calendars-cmd:hover {
+  background-color: #f08080;
+}
+
+.calendars-cmd-prevJump,
+.calendars-cmd-nextJump {
+  width: 8%;
+}
+
+a.calendars-cmd {
+  height: 1.5em;
+}
+
+button.calendars-cmd {
+  text-align: center;
+}
+
+.calendars-cmd-prev,
+.calendars-cmd-prevJump,
+.calendars-cmd-clear {
+  float: left;
+  padding-left: 2%;
+}
+
+.calendars-cmd-current,
+.calendars-cmd-today {
+  float: left;
+  width: 35%;
+  text-align: center;
+}
+
+.calendars-cmd-next,
+.calendars-cmd-nextJump,
+.calendars-cmd-close {
+  float: right;
+  padding-right: 2%;
+  text-align: right;
+}
+
+.calendars-rtl .calendars-cmd-prev,
+.calendars-rtl .calendars-cmd-prevJump,
+.calendars-rtl .calendars-cmd-clear {
+  float: right;
+  padding-left: 0%;
+  padding-right: 2%;
+  text-align: right;
+}
+
+.calendars-rtl .calendars-cmd-current,
+.calendars-rtl .calendars-cmd-today {
+  float: right;
+}
+
+.calendars-rtl .calendars-cmd-next,
+.calendars-rtl .calendars-cmd-nextJump,
+.calendars-rtl .calendars-cmd-close {
+  float: left;
+  padding-left: 2%;
+  padding-right: 0%;
+  text-align: left;
+}
+
+.calendars-month-nav {
+  float: left;
+  background-color: #777;
+  text-align: center;
+}
+
+.calendars-month-nav div {
+  float: left;
+  width: 12.5%;
+  margin: 1%;
+  padding: 1%;
+}
+
+.calendars-month-nav span {
+  color: #888;
+}
+
+.calendars-month-row {
+  clear: left;
+}
+
+.calendars-month {
+  float: left;
+  width: 15em;
+  border: 1px solid #444;
+  text-align: center;
+}
+
+.calendars-month-header,
+.calendars-month-header select,
+.calendars-month-header input {
+
+  background-color: #444;
+  color: #fff;
+  font-weight: bold;
+}
+
+select {
+  width: 220px;
+  border: 1px solid #939598;
+  background-color: white;
+}
+
+.calendars-month-header select,
+.calendars-month-header input {
+  /* height: 1.4em; */
+  border: none;
+}
+
+.calendars-month-year {
+  width: 5.5em;
+}
+
+.calendars-month-header input {
+  position: absolute;
+  display: none;
+}
+
+.calendars-month table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.calendars-month thead {
+  border-bottom: 1px solid #aaa;
+}
+
+.calendars-month th,
+.calendars-month td {
+  margin: 0em;
+  padding: 0em;
+  font-weight: normal;
+  text-align: center;
+}
+
+.calendars-month th {
+  border: 1px solid #777;
+}
+
+.calendars-month th,
+.calendars-month th a {
+  background-color: #777;
+  color: #fff;
+}
+
+.calendars-month td {
+  background-color: #eee;
+  border: 1px solid #aaa;
+}
+
+.calendars-month td.calendars-week {
+  border: 1px solid #777;
+}
+
+.calendars-month td.calendars-week * {
+  background-color: #777;
+  color: #fff;
+  border: none;
+}
+
+.calendars-month a {
+  display: block;
+  width: 100%;
+  padding: 0.125em 0em;
+  background-color: #eee;
+  color: #000;
+  text-decoration: none;
+}
+
+.calendars-month span {
+  display: block;
+  width: 100%;
+  padding: 0.125em 0em;
+}
+
+.calendars-month td span {
+  color: #888;
+}
+
+.calendars-month td .calendars-other-month {
+  background-color: #fff;
+}
+
+.calendars-month td .calendars-weekend {
+  background-color: #ddd;
+}
+
+.calendars-month td .calendars-today {
+  background-color: #f0c0c0;
+}
+
+.calendars-month td .calendars-highlight {
+  background-color: #f08080;
+}
+
+.calendars-month td .calendars-selected {
+  background-color: #777;
+  color: #fff;
+}
+
+.calendars-month th.calendars-week {
+  background-color: #777;
+  color: #fff;
+}
+
+.calendars-status {
+  clear: both;
+  background-color: #ddd;
+  text-align: center;
+}
+
+.calendars-clear-fix {
+  clear: both;
+}
+
+.error {
+ display: block;
+ color:#e12600;
+ font-size: 0.6rem;
+}
+
+.ngxsmartmodal {
+  display: none;
+  position: fixed;
+    top: 15%;
+    left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 10000000000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+height: 100%;
+}
+
+.ngxsmartmodal--open {
+  display: flex;
+}
+
+.ngxsmartmodal-dialog {
+  width: 100%;
+  object-fit: contain;
+  max-width: 1300px;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  max-height: 80%;
+ overflow: auto;
+}
+
+.ngxsmartmodal-dialog-content {
+  padding: 16px;
+}
+
+.ngxsmartmodal-header {
+  background: #279c10;
+  color: #fff;
+  padding: 12px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.ngxsmartmodal-body {
+  padding: 16px;
+}
+
+.ngxsmartmodal-footer {
+  background: #f5f5f5;
+  padding: 12px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  margin-bottom: 10px;
+   padding-bottom: 10px;
+}
+/* Modify the appearance of the vertical scroll bar */
+::-webkit-scrollbar {
+  width: 20px;
+  /* Adjust the width of the scroll bar */
+}
+
+/* Modify the appearance of the scroll thumb */
+::-webkit-scrollbar-thumb {
+  background: #007bff;
+  /* Change the color of the scroll thumb */
+}
+
+/* Modify the appearance of the track (the background of the scroll bar) */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  /* Change the color of the scroll bar track */
+}
+.my-custom-icon {
+  text-align: center;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  /* Center the content vertically */
+  color: rgb(0, 0, 0);
+  background-color: #0074D9;
+  /* Set the background color */
+  border: 2px solid #001f3f;
+  /* Add a border */
+  border-radius: 50%;
+  /* Make it a circle */
+  font-size: 16px;
+}
+
+.my-icon-label {
+  font-weight: bold;
+}
+.fit-content-table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.fit-content-cell {
+  white-space: nowrap;
+  /* Prevent text from wrapping */
+  overflow: hidden;
+  /* Hide overflowed content */
+  text-overflow: ellipsis;
+  /* Show ellipsis for overflowed text */
+  max-width: 100px;
+  /* Set a max-width for the cell */
+}
+
+
+/* body .ui-table .ui-table-tbody>tr>td {
+  background-color: inherit;
+  color:  rgb(0, 0, 0);
+  border: 1px solid #c8c8c8;
+} */
+
+body .ui-table .ui-table-tbody>tr>td {
+  padding: 0.571em 0.857em;
+}
+
+.ui-table .ui-table-thead>tr>th,
+.ui-table .ui-table-tbody>tr>td,
+.ui-table .ui-table-tfoot>tr>td {
+  padding: 0.25em 0.5em;
+}
+
+.fit-content-cell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100px;
+}
+
+.ui-widget,
+.ui-widget * {
+  box-sizing: border-box;
+}
+
+tbody,
+td,
+tfoot,
+th,
+thead,
+tr {
+  border-color: inherit;
+  border-style: solid;
+  border-width: 0;
+}
+
+td,
+th {
+  padding: 0;
+}
+
+
+.uistatehighlight {
+  background: rgb(13, 34, 75) !important;
+  color: white !important;
+}
+/* 
+.uistatehighlight.ui-table .ui-table-tbody>tr {
+  background: rgb(20, 62, 146) !important;
+  color: rgb(255, 255, 255);
+} */
+.id-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.id-card-header {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.customer-photo {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+}
+
+.id-card-body {
+  text-align: center;
+}
+
+.id-card-body h2 {
+  margin: 10px 0;
+  font-size: 1.5em;
+}
+
+.id-card-body p {
+  margin: 5px 0;
+}

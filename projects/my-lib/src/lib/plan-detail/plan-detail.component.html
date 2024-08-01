@@ -1,0 +1,126 @@
+
+  <div class="card" style="max-width: 600px; margin: auto;">
+    <div class="card-header">
+      Plan Detail Form
+    </div>
+    <div class="card-body">
+        <form [formGroup]="yearlyBidPlanForm" >
+            <div class="row">
+              <!-- <div class="col-md-6 mb-3">
+                <label for="plan_Detail_ID" class="form-label">Plan Detail ID</label>
+                <input hidden
+                  type="text"
+                  class="form-control"
+                  id="plan_Detail_ID"
+                  formControlName="plan_Detail_ID"
+                  required
+                />
+                <div *ngIf="yearlyBidPlanForm.get('plan_Detail_ID').invalid && (yearlyBidPlanForm.get('plan_Detail_ID').dirty || yearlyBidPlanForm.get('plan_Detail_ID').touched)">
+                  <div *ngIf="yearlyBidPlanForm.get('plan_Detail_ID').errors.required">
+                    Plan Detail ID is required.
+                  </div>
+                </div>
+              </div> -->
+          
+              <!-- <div class="col-md-6 mb-3">
+                <label for="plan_Id" class="form-label">Plan No</label>
+                <input
+                  type="text" hidden
+                  class="form-control"
+                  id="plan_Id"
+                  formControlName="plan_Id"
+                  required
+                />
+                <input
+                type="text"  
+                class="form-control"
+                id="plan_Id"
+                formControlName="plan_Id"
+                required
+              />
+                <div *ngIf="yearlyBidPlanForm.get('plan_Id').invalid && (yearlyBidPlanForm.get('plan_Id').dirty || yearlyBidPlanForm.get('plan_Id').touched)">
+                  <div *ngIf="yearlyBidPlanForm.get('plan_Id').errors.required">
+                    Plan ID is required.
+                  </div>
+                </div>
+              </div> -->
+              <div class="col-md-6 mb-3">
+                <label for="year" class="form-label">Year</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="year"
+                  formControlName="year"
+                  required
+                  min="1900"
+                  max="2100"
+                />
+                <div *ngIf="yearlyBidPlanForm.get('year').invalid && (yearlyBidPlanForm.get('year').dirty || yearlyBidPlanForm.get('year').touched)">
+                  <div *ngIf="yearlyBidPlanForm.get('year').errors.required">
+                    Year is required.
+                  </div>
+                  <div *ngIf="yearlyBidPlanForm.get('year').errors.min || yearlyBidPlanForm.get('year').errors.max">
+                    Year must be between 1900 and 2100.
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                
+                <!-- <input
+                  type="checkbox"
+                  class="form-control"
+                  id="is_Active"
+                  formControlName="is_Active"
+                /> -->
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <label for="is_Active" class="form-label">Is Active</label> </div>
+          
+              <div class="col-md-6 mb-3">
+                <p-checkbox formControlName="is_publiched" binary="true"></p-checkbox> </div>
+            </div>
+            <div class="row">
+          
+            </div>
+            <div style="float:left;">
+                <!-- <button type="submit" class="btn btn-primary">Save</button> -->
+                <!-- <button type="button" class="btn btn-primary mr-1" (click)="Previous()"
+               translate>previous</button> -->
+                <button [hidden]="isEdit" type="button" (click)="submitPlanApplication()" class="btn btn-success mr-1">Save</button>
+                <button [hidden]="!isEdit" type="button" (click)="update()" class="btn btn-success mr-1">Update</button>
+              </div>
+              <div style="float: right;">
+                <button (click)="done()" [disabled]="!isDone" class="btn btn-primary mr-1">Next</button>
+              </div>
+          </form>
+        </div></div>
+        <div style="float: right;">
+            <button  type="button" class="btn btn-primary mr-1" 
+              translate (click)="addNew()">Add New</button>
+          </div><br><br>
+        <p-table [value]="planDetail" [paginator]="true" [rows]="5">
+            <ng-template pTemplate="header">
+              <tr>
+                  <!-- <th>Plan ID</th> -->
+                  <th>Year</th>
+                  <th>Is Active</th>
+                  <!-- <th>Date</th> -->
+                  <!-- <th>No Bid Floated</th> -->
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-bid let-rowData>
+              <tr (click)='highlighted = rowData;onRowSelect(bid)' class="some-class" tabindex="1"  [class.ui-state-highlight]="rowData === highlighted">
+                <td>{{ bid.year }}</td>
+                <!-- <td>{{ bid.title_Deed_No }}</td> -->
+                <!-- <td>{{ bid.certificate_ID }}</td> -->
+                <td>{{ bid.is_Active ? 'Yes' : 'No' }}</td>
+                <!-- <td>{{ bid.created_By }}</td> -->
+                <!-- <td>{{ bid.date  }}</td> -->
+                <!-- <td>{{ bid.updated_By }}</td>
+                <td>{{ bid.updated_Date | date }}</td> -->
+                <!-- <td>{{ bid.no_Bid_Floated }}</td> -->
+              </tr>
+            </ng-template>
+          </p-table>
