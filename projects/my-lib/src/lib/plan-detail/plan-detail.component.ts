@@ -84,6 +84,7 @@ export class PlanDetailComponent implements OnInit {
       is_Active: [true, Validators.required],
       app_Code: ['', Validators.required]
     });
+    
   }
   ngOnChanges(changes: SimpleChanges) {
     console.log('changes',changes);

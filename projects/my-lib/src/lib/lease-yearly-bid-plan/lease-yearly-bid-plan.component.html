@@ -6,14 +6,14 @@
     <lib-plan-detail (generateApplication)="generateApplication1($event)" [data]="data" (next)="Next($event)" ></lib-plan-detail>  
   </p-tabPanel>
   <p-tabPanel header="Plan Detail">
-    <div class="card" style="max-width: 800px; margin: auto;">
+    <div class="card" style="max-width: 800px; margin: auto;" *ngIf="Form">
       <div class="card-header">
         Lease Yearly Bid Plan Form
       </div>
-      <div class="card-body">
+      <div class="card-body" >
         <form [formGroup]="yearlyBidPlanForm" >
           <div class="row">
-            <!-- <div class="col-md-4 mb-3">
+            <!-- <div class="col-md-6 mb-3">
               <label for="year" class="form-label">Year</label>
               <input
                 type="number"
@@ -34,31 +34,70 @@
                 </div>
               </div>
             </div> -->
-            <div class="col-md-4 mb-3">
+            <!-- <div class="col-md-6 mb-3">
               <label for="year" class="form-label">Plan No</label>
-              <input
-                type="text"
+              <input [readonly]="approve"
+                type="text" 
                 class="form-control"
                 id="plan_No"
                 formControlName="plan_No"
                 [ngClass]="{'is-invalid': isControlInvalid('plan_No')}" 
                 required
               >
-            </div>
+            </div> -->
         
-            <div class="col-md-4 mb-3">
+            <div class="col-md-6 mb-3" *ngIf="!approve">
               <label for="bidType" class="form-label">Bid Type</label>
-              <select class="form-control" formControlName="bid_Type" id="bidType" 
+              <select [disabled]="approve" (change)="onBidTypeChange($event)" class="form-control" formControlName="bid_Type" id="bidType" 
                [ngClass]="{'is-invalid': isControlInvalid('bid_Type')}"  required>
                 <option *ngFor="let bidType of BidTypeLookup" [value]="bidType.bid_Type_Id">
                   {{ bidType.bid_Type }}
                 </option>
               </select>
             </div>
+            <div class="col-md-6 mb-3" *ngIf="!approve && enableCustType">
+              <label for="customerTypeID" class="form-label">Customer Type</label>
+              <select  class="form-control" (change)="onChange($event)" formControlName="customer_Type_ID" 
+              name="Customer_Type" id="Customer_Type"  [ngClass]="{ 'is-invalid': isControlInvalid('customer_Type_ID') }" required>
+                <option value=null selected>select</option>
+                <option *ngFor="let Status of CustomerTypeLookUPlist;" [value]="Status.Customer_Type_ID">
+                    {{Status.Customer_Type}}
+                </option>
+            </select>
+            </div>
+            <div class="col-md-6 mb-3" *ngIf="approve && enableCustType">
+              <label for="customerTypeID" class="form-label">Customer Type</label>
+              <select  class="form-control" disabled (change)="onChange($event)" formControlName="customer_Type_ID" 
+              name="Customer_Type" id="Customer_Type"  [ngClass]="{ 'is-invalid': isControlInvalid('customer_Type_ID') }" required>
+                <option value=null selected>select</option>
+                <option *ngFor="let Status of CustomerTypeLookUPlist;" [value]="Status.Customer_Type_ID">
+                    {{Status.Customer_Type}}
+                </option>
+            </select>
+            </div>
+            <div class="col-md-6 mb-3" *ngIf="approve">
+              <label for="bidType" class="form-label">Bid Type</label>
+              <select disabled class="form-control" formControlName="bid_Type" id="bidType" 
+               [ngClass]="{'is-invalid': isControlInvalid('bid_Type')}"  required>
+                <option *ngFor="let bidType of BidTypeLookup" [value]="bidType.bid_Type_Id">
+                  {{ bidType.bid_Type }}
+                </option>
+              </select>
+            </div>
+            
         
-            <div class="col-md-4 mb-3">
+            <div class="col-md-6 mb-3" *ngIf="!approve">
               <label for="landUse" class="form-label">Land Use</label>
-              <select class="form-control" formControlName="land_use" id="landUse"
+              <select [disabled]="approve" class="form-control" formControlName="land_use" id="landUse"
+              [ngClass]="{'is-invalid': isControlInvalid('land_use')}"  required>
+                <option *ngFor="let use of LandUseLookup" [value]="use.Type_Of_Use_ID">
+                  {{ use.Type_Of_Use }}
+                </option>
+              </select>
+            </div>
+            <div class="col-md-6 mb-3" *ngIf="approve">
+              <label for="landUse" class="form-label">Land Use</label>
+              <select disabled class="form-control" formControlName="land_use" id="landUse"
               [ngClass]="{'is-invalid': isControlInvalid('land_use')}"  required>
                 <option *ngFor="let use of LandUseLookup" [value]="use.Type_Of_Use_ID">
                   {{ use.Type_Of_Use }}
@@ -68,22 +107,31 @@
           </div>
         
           <div class="row">
-            <div class="col-md-4 mb-3">
+            <div class="col-md-6 mb-3" *ngIf="!approve">
               <label for="buildingUse" class="form-label">Building Use</label>
-              <select class="form-control" formControlName="buling_Use" id="buildingUse"  [ngClass]="{'is-invalid': isControlInvalid('buling_Use')}"  required>
-                <option *ngFor="let use of BuildingUseLookup" [value]="use.proprty_Use">
-                  {{ use.name }}
+              <select class="form-control" [disabled]="approve" formControlName="buling_Use" id="buildingUse"  [ngClass]="{'is-invalid': isControlInvalid('buling_Use')}"  required>
+                <option *ngFor="let use of BuildingUseLookup" [value]="use.Code">
+                  {{ use.Name }}
+                </option>
+              </select>
+             
+            </div>
+            <div class="col-md-6 mb-3" *ngIf="approve">
+              <label for="buildingUse" class="form-label">Building Use</label>
+              <select class="form-control" disabled formControlName="buling_Use" id="buildingUse"  [ngClass]="{'is-invalid': isControlInvalid('buling_Use')}"  required>
+                <option *ngFor="let use of BuildingUseLookup" [value]="use.Code">
+                  {{ use.Name }}
                 </option>
               </select>
              
             </div>
         
-            <div class="col-md-4 mb-3">
+            <div class="col-md-6 mb-3">
               <label for="plotQty" class="form-label">Plot Quantity</label>
               <input 
                 type="number" 
                 class="form-control rounded-input" 
-                id="plotQty" 
+                id="plotQty"  [readonly]="approve"
                 formControlName="plot_Qty" 
                 [ngClass]="{'is-invalid': isControlInvalid('plot_Qty')}" 
                 required>
@@ -93,73 +141,69 @@
             </div>
             
         
-            <div class="col-md-4 mb-3">
+            <div class="col-md-6 mb-3">
               <label for="totalSizeOfPlot" class="form-label">Total Size of Plot</label>
-              <input type="number" class="form-control" id="totalSizeOfPlot" formControlName="total_Sizeof_plot" required>
+              <input type="number" [readonly]="approve" class="form-control" id="totalSizeOfPlot" formControlName="total_Sizeof_plot" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="minBidPlot" class="form-label">Min Bid Plot</label>
+              <input type="number" [readonly]="approve" class="form-control" id="minBidPlot" formControlName="min_bid_Plot" required>
             </div>
           </div>
         
           <div class="row">
-            <div class="col-md-4 mb-3">
+            <div class="col-md-6 mb-3">
               <!-- <label for="bidStartDate" class="form-label">Bid Start Date</label>
               <input type="date" class="form-control" id="bidStartDate" formControlName="bid_Start_Date" required> -->
               <div class="input-group">
                 <div class="date-container">
                   <label for="bidStartDate" class="form-label">Bid Start Date</label>
-                  <input type="date" class="form-control date-input" id="bidStartDate" name="bidStartDate" formControlName="bid_Start_Date"
+                  <input type="date" [readonly]="approve" class="form-control date-input" id="bidStartDate" name="bidStartDate" formControlName="bid_Start_Date"
                     required>
                 </div>
                 <div class="time-container">
                   <label for="startTime" class="form-label">Time</label>
-                  <input type="time" class="form-control time-input" id="startTime" name="startTime" formControlName="start_TimeEn">
+                  <input type="time" [readonly]="approve" class="form-control time-input" id="startTime" name="startTime" formControlName="start_TimeEn">
                 <!-- <button (click)="checkTime()">check</button> -->
                 </div>
               </div>
             </div>
         
-            <div class="col-md-4 mb-3">
+            <div class="col-md-6 mb-3">
               <!-- <label for="bidOpeningDate" class="form-label">Bid Opening Date</label>
               <input type="date" class="form-control" id="bidOpeningDate" formControlName="bid_Opning_Date" required> -->
               <div class="input-group">
                 <div class="date-container">
                   <label for="openingDate" class="form-label">Bid Opening Date</label>
-                  <input type="date" class="form-control date-input" id="openingDate" name="openingDate" formControlName="bid_Opning_Date" required>
+                  <input type="date" [readonly]="approve" class="form-control date-input" id="openingDate" name="openingDate" formControlName="bid_Opning_Date" required>
                 </div>
                 <div class="time-container">
                   <label for="openingTimeEn" class="form-label">Time</label>
-                  <input type="time" class="form-control time-input" id="openingTimeEn" name="openingTimeEn" formControlName="opening_TimeEn">
+                  <input type="time" [readonly]="approve" class="form-control time-input" id="openingTimeEn" name="openingTimeEn" formControlName="opening_TimeEn">
                 <!-- <button (click)="checkTime()">check</button> -->
                 </div>
               </div>
             </div>
         
-            <div class="col-md-4 mb-3">
+            <div class="col-md-6 mb-3">
               <!-- <label for="bidEndDate" class="form-label">Bid End Date</label>
               <input type="date" class="form-control" id="bidEndDate" formControlName="bid_Enddate" required> -->
               <div class="input-group">
                 <div class="date-container">
                   <label for="bidEndDate" class="form-label">Bid End Date</label>
-                  <input type="date" class="form-control date-input" id="bidEndDate" name="bidEndDate" 
+                  <input type="date" [readonly]="approve" class="form-control date-input" id="bidEndDate" name="bidEndDate" 
                   formControlName="bid_Enddate" required>
                 </div>
                 <div class="time-container">
                   <label for="endTime" class="form-label">Time</label>
-                  <input type="time" class="form-control time-input" id="endTime" name="endTime" formControlName="end_Time">
+                  <input type="time" [readonly]="approve" class="form-control time-input" id="endTime" name="endTime" formControlName="end_Time">
                 <!-- <button (click)="checkTime()">check</button> -->
                 </div>
               </div>
             </div>
-          </div>
-        
-          <div class="row">
-            <div class="col-md-4 mb-3">
-              <label for="minBidPlot" class="form-label">Min Bid Plot</label>
-              <input type="number" class="form-control" id="minBidPlot" formControlName="min_bid_Plot" required>
-            </div>
-        
             <div class="col-md-6 mb-3" *ngIf="approve">
               <div class="row">
-                <div class="col-md-4 mb-3">
+                <div class="col-md-6 mb-3">
                   <label for="isPublished" class="form-label">Is Published</label> </div>
             
                 <div class="col-md-6 mb-3">
@@ -168,17 +212,18 @@
             </div>
           </div>
         
+        
           <div style="float:left;">
-            <button type="button" class="btn btn-primary mr-1" (click)="selectedTab = 0"
-            translate>previous</button>
+            <!-- <button type="button" class="btn btn-primary mr-1" (click)="selectedTab = 0"
+            translate>previous</button> -->
             <button [hidden]="isEdit" type="button" (click)="submitForm()" class="btn btn-success mr-1">Save</button>
             <button [hidden]="!isEdit" type="button" (click)="update()" class="btn btn-success mr-1">Update</button>
           </div>
         
-          <div style="float: right;">
+          <!-- <div style="float: right;">
             <button (click)="done()" [hidden]="approve" type="button" [disabled]="!isDone" class="btn btn-primary mr-1">Finish</button>
             <button (click)="done1()" [hidden]="!approve" type="button" [disabled]="!isDone" class="btn btn-primary mr-1">Finished</button>
-          </div>
+          </div> -->
         </form>
         
       </div>
@@ -187,9 +232,17 @@
     <div class="card mt-4">
      
       <div class="card-body">
+        <div style="float:left;">
+          <button type="button" class="btn btn-primary mr-1" (click)="selectedTab = 0"
+          translate>previous</button></div>
         <div style="float: right;">
-          <button  type="button" class="btn btn-primary mr-1" 
-            translate (click)="addNew()">Add New</button>
+          
+
+            <button (click)="done()" [hidden]="approve" type="button" [disabled]="!isDone" class="btn btn-primary mr-1">Finish</button>
+            <button (click)="done1()" [hidden]="!approve" type="button" [disabled]="!isDone" class="btn btn-primary mr-1">Finished</button>
+          
+          <button  type="button" [hidden]="Form" class="btn btn-primary mr-1" 
+            translate (click)="addNew();Form=true" [hidden]="approve">Add New</button>
         </div><br><br>
           <p-table [value]="yearlyBidPlans" [paginator]="true" [rows]="5">
           <ng-template pTemplate="header">
@@ -211,7 +264,7 @@
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-plan let-rowData>
-            <tr (click)='highlighted = rowData;selectPlan(plan)' class="some-class" tabindex="1"  [class.ui-state-highlight]="rowData === highlighted">
+            <tr (click)='highlighted = rowData;selectPlan(plan);Form=true' class="some-class" tabindex="1"  [class.ui-state-highlight]="rowData === highlighted">
               <!-- <td>{{ plan.plan_ID }}</td> -->
               <td>{{ plan.plan_No }}</td>
               <td>{{ plan.type_Of_Use }}</td>
@@ -224,7 +277,7 @@
               <td>{{ plan.bid_Enddate  }}</td>
               <!-- <td>{{ plan.prepared_by }}</td>
               <td>{{ plan.approved_by }}</td> -->
-              <td>{{ plan.is_published ? 'No' : 'Yes' }}</td>
+              <td>{{ plan.is_publiched ? 'Yes' : 'No' }}</td>
               <td>{{ plan.min_bid_Plot }}</td>
             </tr>
           </ng-template>

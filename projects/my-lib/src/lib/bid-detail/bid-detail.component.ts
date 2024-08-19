@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/
 import { DomSanitizer } from '@angular/platform-browser';
 import { MyLibService } from '../my-lib.service';
 import { NotificationsService } from 'angular2-notifications';
+import { ActivatedRoute, Params } from '@angular/router';
 
 interface BidDetail {
   bid_Detail_Id: any;
@@ -46,8 +47,12 @@ export class BidDetailComponent {
   plan_id: any;
   Plot_Limit: any;
   totalSize: any;
+  formcode: any;
+  taskid: any;
+  service_id: any;
+  IsPosted: boolean;
   constructor(private notificationsService: NotificationsService,
-    private sanitizer: DomSanitizer,
+    private sanitizer: DomSanitizer,private activatedRoute: ActivatedRoute,
   private apiService:MyLibService) { }
   bidDetails: BidDetail[] = [];
   plan_Document: any;
@@ -61,6 +66,17 @@ export class BidDetailComponent {
       this.apiService.getPlan_DetailById(this.License).subscribe((res:any)=>{
         this.plan_id=res.procPlan_Details[0].plan_Detail_ID
         this.getReadyLease(this.plan_id)
+        this.activatedRoute.params.subscribe((params: Params) => {
+          console.log('paramsss',params);
+          this.formcode=params.formcode
+          this.taskid=params.tskID
+          this.service_id=params.SDP_ID
+          if (this.taskid=='7590b7c4-54cd-43d7-b887-9f0c520ad17a'){
+          this.IsPosted=false
+        }else if(this.taskid=='08d1e87b-e2a5-4cee-9d47-b1106590418b'){
+        this.IsPosted=true
+        }}
+        )
       })
     }else{
       this.approve=false
@@ -106,6 +122,7 @@ export class BidDetailComponent {
   onSelectReadyLease(bid){
     this.bidDetail.title_Deed_No=bid.title_Deed_No
     this.bidDetail.certificate_No=bid.cerficate_ID
+    this.bidDetail.size=bid.plot_Size_M2
     this.bidDetail.total_Min_Bid_Price=bid.current_Lease_Price
     this.displayReadyLease=false
   }

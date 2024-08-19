@@ -1,0 +1,92 @@
+<p-tabView  (onChange)="tabChanged($event)" [(activeIndex)]="selectedTab" selected="true">
+    <p-tabPanel header="Bids">
+        <p-table [value]="bidDetails" [paginator]="true" [rows]="5">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Bid No</th>
+                    <th>Title Deed No</th>
+                    <!-- <th>Certificate ID</th> -->
+                    <!-- <th>Customer ID</th> -->
+                    <!-- <th>Rank</th> -->
+                    <th>Created Date</th>
+                    <!-- <th>Applicant Name (EN)</th>
+                    <th>Applicant Name (AM)</th> -->
+                    <th>Is Approved</th>
+                    <th>Action</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-bid let-rowData>
+                <tr (click)='highlighted = rowData;' class="some-class" tabindex="1" [class.ui-state-highlight]="rowData === highlighted">
+                    <td>{{ bid.bid_No }}</td>
+                    <td>{{ bid.title_Deed_No }}</td>
+                    <!-- <td>{{ bid.cerficate_ID }}</td> -->
+                    <!-- <td>{{ bid.customer_ID }}</td> -->
+                    <!-- <td>{{ bid.rank.trim() }}</td> -->
+                    <td>{{ bid.created_Date | date: 'yyyy-MM-dd HH:mm' }}</td>
+                    <!-- <td>{{ bid.applicant_First_Name_EN }} {{ bid.applicant_Middle_Name_EN }} {{ bid.applicant_Last_Name_EN }}</td>
+                    <td>{{ bid.applicant_First_Name_AM }} {{ bid.applicant_Middle_Name_AM }} {{ bid.applicant_Last_Name_AM }}</td> -->
+                    <td>{{ bid.is_Approved ? 'Yes' : 'No' }}</td>
+                    <td>
+                        <button type="button" class="btn btn-primary" (click)="onRowSelect(bid)">Select</button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-tabPanel>
+    <p-tabPanel header="Results" >
+      
+      
+      <div class="card mt-4">
+     
+        <div class="card-body">
+          <div style="float: left;"> <button type="button" class="btn btn-primary mr-1" (click)="selectedTab = 0"
+            translate>previous</button>
+          </div>
+          <div style="float: right;">
+            <button (click)="done()"  [disabled]="!isDone"  type="button" class="btn btn-primary mr-1" 
+              translate>Done</button>
+          
+          </div><br><br>
+        </div>
+      </div>
+      <p-table [value]="bidResults" [paginator]="true" [rows]="5">
+        <ng-template pTemplate="header">
+            <tr>
+                <!-- <th>Bid No</th> -->
+                <th>Rank</th>
+                <th>Applicant Name (EN)</th>
+                <!-- <th>Applicant Name (AM)</th> -->
+                <th>Title Deed No</th>
+                <!-- <th>Certificate ID</th> -->
+                <!-- <th>Customer ID</th> -->
+                <th>Created Date</th>
+                <th>Status</th>
+                
+                <th>Is Returned</th>
+                <th>Action</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-bid let-rowData>
+            <tr (click)='highlighted = rowData;' class="some-class" tabindex="1" [class.ui-state-highlight]="rowData === highlighted">
+                <!-- <td>{{ bid.bid_No }}</td> -->
+                <td>{{ bid.rank.trim() }}</td>
+                <td>{{ bid.applicant_First_Name_EN }} {{ bid.applicant_Middle_Name_EN }} {{ bid.applicant_Last_Name_EN }}</td>
+                <!-- <td>{{ bid.applicant_First_Name_AM }} {{ bid.applicant_Middle_Name_AM }} {{ bid.applicant_Last_Name_AM }}</td> -->
+                <td style="word-break: break-word; min-width: 150px;">{{ bid.title_Deed_No }}</td>
+                
+                <!-- <td>{{ bid.cerficate_ID }}</td> -->
+                <!-- <td>{{ bid.customer_ID }}</td> -->
+                <td>{{ bid.created_Date | date: 'yyyy-MM-dd HH:mm' }}</td>
+                <td> <p-checkbox [(ngModel)]="bid.is_CPO_Returned" name="isCPOReturned{{bid.id}}" id="isCPOReturned{{bid.id}}"
+                    binary="true"></p-checkbox></td>
+                <td>{{ bid.statuss  }}</td>
+                <td>
+                    <button type="button" class="btn btn-primary" (click)="update(bid);Form=true">Return</button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+    
+     </p-tabPanel>
+    
+  </p-tabView>

@@ -1,0 +1,221 @@
+<p-tabView
+  (onChange)="tabChanged($event)"
+  [(activeIndex)]="selectedTab"
+  selected="true"
+>
+  <p-tabPanel header="Bids">
+    <p-table [value]="bidDetails" [paginator]="true" [rows]="5">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Bid No</th>
+          <th>Title Deed No</th>
+          <!-- <th>Certificate ID</th> -->
+          <!-- <th>Customer ID</th> -->
+          <!-- <th>Rank</th> -->
+          <th>Created Date</th>
+          <!-- <th>Applicant Name (EN)</th>
+                    <th>Applicant Name (AM)</th> -->
+          <!-- <th>Is Approved</th> -->
+          <th>Action</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-bid let-rowData>
+        <tr
+          (click)="highlighted = rowData"
+          class="some-class"
+          tabindex="1"
+          [class.ui-state-highlight]="rowData === highlighted"
+        >
+          <td>{{ bid.bid_No }}</td>
+          <td>{{ bid.title_Deed_No }}</td>
+          <!-- <td>{{ bid.cerficate_ID }}</td> -->
+          <!-- <td>{{ bid.customer_ID }}</td> -->
+          <!-- <td>{{ bid.rank.trim() }}</td> -->
+          <td>{{ bid.created_Date | date : "yyyy-MM-dd HH:mm" }}</td>
+          <!-- <td>{{ bid.applicant_First_Name_EN }} {{ bid.applicant_Middle_Name_EN }} {{ bid.applicant_Last_Name_EN }}</td>
+                    <td>{{ bid.applicant_First_Name_AM }} {{ bid.applicant_Middle_Name_AM }} {{ bid.applicant_Last_Name_AM }}</td> -->
+          <!-- <td>{{ bid.is_Approved ? "Yes" : "No" }}</td> -->
+          <td>
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="onRowSelect(bid)"
+            >
+              Select
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-tabPanel>
+  <p-tabPanel header="Results">
+    <div class="card" style="max-width: 600px; margin: auto" *ngIf="Form">
+      <div class="card-header">Bid Result Form</div>
+      <div class="card-body">
+        <form #bidDetailForm="ngForm">
+          <div class="row">
+            <div class="col-md-12 mb-3" *ngIf="onAproved">
+              <label for="status" class="form-label">Status</label>
+              <select
+                class="form-control"
+                [(ngModel)]="bidResult.status"
+                name="status"
+                id="status"
+                #status="ngModel"
+                [ngClass]="{ 'is-invalid': status.invalid }"
+                required
+              >
+                <option
+                  *ngFor="let status of statusLookUp"
+                  [value]="status.bid_Result_Status_Id"
+                >
+                  {{ status.status }}
+                </option>
+              </select>
+            </div>
+            <div class="col-md-12 mb-3" *ngIf="onAproved">
+              <label for="status" class="form-label">Status</label>
+              <select
+                class="form-control"
+                [(ngModel)]="bidResult.status"
+                name="status"
+                id="status" disabled
+                #status="ngModel"
+                [ngClass]="{ 'is-invalid': status.invalid }"
+                required
+              >
+                <option
+                  *ngFor="let status of statusLookUp"
+                  [value]="status.bid_Result_Status_Id"
+                >
+                  {{ status.status }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 mb-3">
+              <label for="Remark" class="form-label">Remark</label>
+              <!-- <input type="tex" class="form-control" id="Remark" name="Remark" [(ngModel)]="bidResult.remark" required> -->
+              <textarea
+                rows="4"
+                [readonly]="onAproved"
+                class="form-control"
+                id="Remark"
+                name="Remark"
+                [(ngModel)]="bidResult.remark"
+              ></textarea>
+            </div>
+          </div>
+          <div class="row" *ngIf="onAproved">
+            <div class="col-md-12 mb-3">
+              <!-- <label for="isActive" class="form-label">Is Active</label> -->
+              <label for="isApproved" class="col-form-label" translate=""
+                >Is Approved</label
+              >
+              <div class="col-sm-9">
+                <p-checkbox
+                  [(ngModel)]="bidResult.is_Approved"
+                  name="isApproved"
+                  id="isApproved"
+                  binary="true"
+                ></p-checkbox>
+              </div>
+            </div>
+          </div>
+          <!-- <button type="button" (click)="submitForm()" class="btn btn-success mx-3" >save</button> -->
+          <button type="button" class="btn btn-success mx-3" (click)="update()">
+            Update
+          </button>
+        </form>
+      </div>
+    </div>
+    <div *ngIf="note" class="note-container">
+      <div class="note-box">
+        <p class="note-text">{{ note }}</p>
+      </div>
+    </div>
+    <div *ngIf="!isFunctional">
+
+      <div class="card mt-4">
+        <div class="card-body">
+          <div style="float: left">
+            <button
+              type="button"
+              class="btn btn-primary mr-1"
+              (click)="selectedTab = 0"
+              translate
+            >
+              previous
+            </button>
+          </div>
+          <div style="float: right">
+            <button
+              (click)="done()"
+              [disabled]="!isDone"
+              type="button"
+              class="btn btn-primary mr-1"
+              translate
+            >
+              Done
+            </button>
+            <!-- <button  type="button" [hidden]="Form" class="btn btn-primary mr-1" 
+                translate (click)="resetForm();Form=true">Add New</button> -->
+          </div>
+          <br /><br />
+        </div>
+      </div>
+      <p-table [value]="bidResults" [paginator]="true" [rows]="5">
+        <ng-template pTemplate="header">
+          <tr>
+            <!-- <th>Bid No</th> -->
+            <th>Rank</th>
+            <th>Applicant Name (EN)</th>
+            <!-- <th>Applicant Name (AM)</th> -->
+            <th>Title Deed No</th>
+            <!-- <th>Certificate ID</th> -->
+            <!-- <th>Customer ID</th> -->
+            <th>Created Date</th>
+            <th>Status</th>
+            <!-- <th>Is Approve</th> -->
+            <th>Action</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-bid let-rowData>
+          <tr
+            (click)="highlighted = rowData"
+            class="some-class"
+            tabindex="1"
+            [class.ui-state-highlight]="rowData === highlighted"
+          >
+            <!-- <td>{{ bid.bid_No }}</td> -->
+            <td>{{ bid.rank.trim() }}</td>
+            <td>
+              {{ bid.applicant_First_Name_EN }}
+              {{ bid.applicant_Middle_Name_EN }} {{ bid.applicant_Last_Name_EN }}
+            </td>
+            <!-- <td>{{ bid.applicant_First_Name_AM }} {{ bid.applicant_Middle_Name_AM }} {{ bid.applicant_Last_Name_AM }}</td> -->
+            <td style="word-break: break-word; min-width: 150px">
+              {{ bid.title_Deed_No }}
+            </td>
+  
+            <!-- <td>{{ bid.cerficate_ID }}</td> -->
+            <!-- <td>{{ bid.customer_ID }}</td> -->
+            <td>{{ bid.created_Date | date : "yyyy-MM-dd HH:mm" }}</td>
+            <!-- <td>{{ bid.is_Approved ? "Yes" : "No" }}</td> -->
+            <td>{{ bid.statuss }}</td>
+            <td>
+              <button
+                type="button"
+                class="btn btn-primary"
+                (click)="onRowSelects(bid); Form = true"
+              >
+                Select
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+      </div>
+  </p-tabPanel>
+</p-tabView>

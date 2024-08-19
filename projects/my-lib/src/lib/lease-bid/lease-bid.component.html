@@ -1,4 +1,4 @@
-<div class="card" style="max-width: 800px; margin: auto;">
+<div class="card" style="max-width: 800px; margin: auto;" *ngIf="Form">
     <div class="card-header">
       Lease Bid Form
     </div>
@@ -6,13 +6,13 @@
       <!-- Lease Bid Form -->
       <form #leaseBidForm="ngForm">
         <div class="row">
-          <div class="col-md-6 mb-3">
+          <!-- <div class="col-md-6 mb-3">
             <label for="bidNo" class="form-label">Bid No</label>
             <input type="text" class="form-control" id="bidNo" name="bidNo" [(ngModel)]="formData.bid_No" required>
-          </div>
+          </div> -->
           <div class="col-md-6 mb-3">
             <label for="bidPlanID" class="form-label">Bid Plan</label>
-            <input type="text" readonly (click)="displayplan=true" class="form-control" id="bidPlanID" name="bidPlanID" [(ngModel)]="Plan_No" required>
+            <input type="text" [disabled]="IsPosted" readonly (click)="displayplan=true" class="form-control" id="bidPlanID" name="bidPlanID" [(ngModel)]="Plan_No" required>
           </div>
           <!-- <div class="col-md-6 mb-3"> 
             <label for="bidType" class="form-label">Bid Type</label>
@@ -24,15 +24,22 @@
     </select>
     
           </div> -->
+          <div class="col-md-6 mb-3">
+            <label for="bidDocPrice" class="form-label">Bid Doc Price</label>
+            <input type="number" [disabled]="IsPosted" class="form-control" id="bidDocPrice" name="bidDocPrice" [(ngModel)]="formData.bid_Doc_Price" required>
+          </div>
         </div>
         <div class="row">
           <div class="col-md-6 mb-3">
-            <label for="bidDocPrice" class="form-label">Bid Doc Price</label>
-            <input type="number" class="form-control" id="bidDocPrice" name="bidDocPrice" [(ngModel)]="formData.bid_Doc_Price" required>
+            <label for="advancePaymentGrad" class="form-label">Advance Payment Grade in (%)</label>
+            <input type="number" [disabled]="IsPosted" class="form-control"  (input)="onGradeChange(paymenteGrade)" id="advancePaymentGrad" name="advancePaymentGrad" [(ngModel)]="paymenteGrade" required>
+            <div *ngIf="isValidGrade">
+              <p class="text-danger">The Sum Of Bid Price Grade and Advance Payment must be less than or Equal to 100.</p>
+            </div>
           </div>
           <div class="col-md-6 mb-3">
-            <label for="advancePaymentGrad" class="form-label">Advance Payment Grade in (%)</label>
-            <input type="number" class="form-control"  (input)="onGradeChange(paymenteGrade)" id="advancePaymentGrad" name="advancePaymentGrad" [(ngModel)]="paymenteGrade" required>
+            <label for="bidPricesGraid" class="form-label">Bid Prices Grade in (%)</label>
+            <input type="number" [disabled]="IsPosted" class="form-control" (input)="onGradeChange1(priceGrade)" id="bidPricesGraid"  name="bidPricesGraid" [(ngModel)]="priceGrade" required>
             <div *ngIf="isValidGrade">
               <p class="text-danger">The Sum Of Bid Price Grade and Advance Payment must be less than or Equal to 100.</p>
             </div>
@@ -42,13 +49,6 @@
        
         </div>
         <div class="row">
-          <div class="col-md-6 mb-3">
-            <label for="bidPricesGraid" class="form-label">Bid Prices Grade in (%)</label>
-            <input type="number" class="form-control" (input)="onGradeChange1(priceGrade)" id="bidPricesGraid"  name="bidPricesGraid" [(ngModel)]="priceGrade" required>
-            <div *ngIf="isValidGrade">
-              <p class="text-danger">The Sum Of Bid Price Grade and Advance Payment must be less than or Equal to 100.</p>
-            </div>
-          </div>
           <!-- <div class="col-md-6 mb-3">
             <label for="publishedDate" class="form-label">Published Date</label>
             <input type="date" class="form-control" id="publishedDate" name="publishedDate" [(ngModel)]="formData.published_Date" required>
@@ -57,15 +57,29 @@
             <div class="input-group">
               <div class="date-container">
                 <label for="openingDate" class="form-label">Opening Date</label>
-                <input type="date" class="form-control date-input" id="openingDate" name="openingDate" [(ngModel)]="formData.opening_Date" required>
+                <input type="date" [disabled]="IsPosted" class="form-control date-input" id="openingDate" name="openingDate" [(ngModel)]="formData.opening_Date" required>
               </div>
               <div class="time-container">
                 <label for="openingTimeEn" class="form-label">Time</label>
-                <input type="time" class="form-control time-input"
+                <input type="time" [disabled]="IsPosted" class="form-control time-input"
                  id="openingTimeEn"  (ngModelChange)="onODateTimeChange()"
                 name="openingTimeEn" [(ngModel)]="opening_TimeEn">
-              <!-- <button (click)="checkTime()">check</button> -->
               </div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+           
+            <div class="input-group">
+              <div class="date-container">
+                <label for="closingDate" class="form-label">Closing Date</label>
+                <input type="date" [disabled]="IsPosted" class="form-control date-input" id="closingDate" name="closingDate" [(ngModel)]="formData.closeding_Date" required>
+              </div>
+              <div class="time-container">
+                <label for="closingTimeEn" class="form-label">Time</label>
+                <input type="time" [disabled]="IsPosted" class="form-control time-input" id="closingTimeEn" name="closingTimeEn" [(ngModel)]="closing_TimeEn" (ngModelChange)="onDateTimeChange()">
+              </div>
+              
+              
             </div>
           </div>
         </div>
@@ -76,29 +90,27 @@
           </div> -->
           
           <div class="col-md-6 mb-3">
-           
-            <div class="input-group">
-              <div class="date-container">
-                <label for="closingDate" class="form-label">Closing Date</label>
-                <input type="date" class="form-control date-input" id="closingDate" name="closingDate" [(ngModel)]="formData.closeding_Date" required>
-              </div>
-              <div class="time-container">
-                <label for="closingTimeEn" class="form-label">Time</label>
-                <input type="time" class="form-control time-input" id="closingTimeEn" name="closingTimeEn" [(ngModel)]="closing_TimeEn" (ngModelChange)="onDateTimeChange()">
-              </div>
-              
-              
-            </div>
-          </div>
-          <div class="col-md-6 mb-3">
             <div class="input-group">
               <div class="date-container">
                 <label for="openingDateET" class="form-label">Opening Date (ET)</label>
-                <input type="date" class="form-control date-input" id="openingDateET" name="openingDateET" [(ngModel)]="formData.opining_Date_ET" required>
+                <input type="date" disabled class="form-control date-input" id="openingDateET" name="openingDateET" [(ngModel)]="formData.opining_Date_ET" required>
               </div>
               <div class="time-container">
-                <label for="openingTimeET" class="form-label">Time</label>
-                <input type="time" class="form-control time-input" id="openingTimeET" name="openingTimeET" [(ngModel)]="opening_TimeET">
+                <label for="openingTimeET"  class="form-label">Time</label>
+                <input type="time" disabled class="form-control time-input" id="openingTimeET" name="openingTimeET" [(ngModel)]="opening_TimeET">
+              
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+           <div class="input-group">
+              <div class="date-container">
+                <label for="closingDateET" class="form-label">Closing Date (ET)</label>
+                <input type="date" disabled class="form-control date-input" id="closingDateET" name="closingDateET" [(ngModel)]="formData.closeding_Date_ET" required>
+              </div>
+              <div class="time-container">
+                <label for="closingTimeET" class="form-label">Time</label>
+                <input type="time" disabled class="form-control time-input" id="closingTimeET" name="closingTimeET" [(ngModel)]="closing_TimeET">
               
               </div>
             </div>
@@ -106,21 +118,8 @@
         </div>
         <div class="row">
           <div class="col-md-6 mb-3">
-           <div class="input-group">
-              <div class="date-container">
-                <label for="closingDateET" class="form-label">Closing Date (ET)</label>
-                <input type="date" class="form-control date-input" id="closingDateET" name="closingDateET" [(ngModel)]="formData.closeding_Date_ET" required>
-              </div>
-              <div class="time-container">
-                <label for="closingTimeET" class="form-label">Time</label>
-                <input type="time" class="form-control time-input" id="closingTimeET" name="closingTimeET" [(ngModel)]="closing_TimeET">
-              
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6 mb-3">
             <label for="bidDocument" class="form-label">Bid Document</label>
-            <p-fileUpload #fileUpload id="File" name="demo[]" [customUpload]="true" [auto]="true"
+            <p-fileUpload [hidden]="IsPosted" #fileUpload id="File" name="demo[]" [customUpload]="true" [auto]="true"
                       [chooseLabel]="'Upload'"
                        (uploadHandler)="upload($event)" accept=".pdf" 
                                     [maxFileSize]="3000000" translate>
@@ -128,6 +127,15 @@
                      
                       </p-fileUpload> 
             <iframe *ngIf="uploadedDocumnet"  class="ng-template" width="100%" height="100px" [src]="documentupload" ></iframe>
+          </div>
+          <div class="col-md-6 mb-3" *ngIf="IsPosted">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="isPublished" class="form-label">Is Post</label> </div>
+          
+              <div class="col-md-6 mb-3">
+                <p-checkbox [(ngModel)]="formData.is_Posted" binary="true"></p-checkbox> </div>
+            </div>
           </div>
         </div>
         <div style="float:left;">
@@ -138,16 +146,18 @@
         </div>
         <div style="float: right;">
         </div>
-        <div style="float: right;">  <button [disabled]="!isDone" type="button" class="btn btn-primary mr-1" (click)="Next()"  translate>Next</button></div>
-     
+       
       </form>
   
    
     </div>
   </div>
   <div style="float: right;">
-    <button  type="button" class="btn btn-primary mr-1" 
-      translate (click)="addNew()">Add New</button>
+   <button [hidden]="!IsPosted" [disabled]="!isDone"  type="button" class="btn btn-primary mr-1" (click)="Done()"  translate>Done</button>
+   <button  type="button" class="btn btn-primary mr-1" (click)="Next()"  translate>Next</button>
+     
+    <button  type="button" [hidden]="Form || IsPosted" class="btn btn-primary mr-1" 
+      translate (click)="addNew();Form=true">Add New</button>
   </div><br><br>
   <p-table [value]="leaseBids" [paginator]="true" [rows]="5">
     <ng-template pTemplate="header">
@@ -165,7 +175,7 @@
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-bid let-rowData>
-      <tr (click)='highlighted = rowData;onRowSelect(bid)' class="some-class" tabindex="1"  [class.ui-state-highlight]="rowData === highlighted">
+      <tr (click)='highlighted = rowData;onRowSelect(bid);Form=true' class="some-class" tabindex="1"  [class.ui-state-highlight]="rowData === highlighted">
         <td>{{ bid.bid_No }}</td>
         <td>{{ bid.plan_No }}</td>
         <td>{{ bid.bid_Types }}</td>
@@ -224,7 +234,7 @@
             <td>{{ plan.bid_Enddate | date }}</td>
             <!-- <td>{{ plan.prepared_by }}</td>
             <td>{{ plan.approved_by }}</td> -->
-            <td>{{ plan.is_published ? 'Yes' : 'No' }}</td>
+            <td>{{ plan.is_publiched ? 'Yes' : 'No' }}</td>
             <td>{{ plan.min_bid_Plot }}</td>
           </tr>
         </ng-template>

@@ -16,14 +16,17 @@ import { CheckboxModule } from "primeng/checkbox";
 import { GisMapComponent } from './gis-map/gis-map.component';
 import { SimpleNotificationsModule } from 'angular2-notifications';
 import { PlanDetailComponent } from './plan-detail/plan-detail.component';
+import { BidResultComponent } from './bid-result/bid-result.component';
+import { RReturnCpioComponent } from './rreturn-cpio/rreturn-cpio.component';
+import { ReturnCpioComponent } from './return-cpio/return-cpio.component';
 @NgModule({
-  declarations: [MyLibComponent, LeaseYearlyBidPlanComponent, LeaseReadyForBidComponent, BidDetailComponent, LeaseBidComponent, GisMapComponent, PlanDetailComponent],
+  declarations: [MyLibComponent, LeaseYearlyBidPlanComponent, LeaseReadyForBidComponent, BidDetailComponent, LeaseBidComponent, GisMapComponent, PlanDetailComponent, BidResultComponent, RReturnCpioComponent, ReturnCpioComponent],
   imports: [BrowserModule,TableModule,TabViewModule,CheckboxModule, BrowserModule,
     ReactiveFormsModule ,
     FormsModule,DialogModule,BrowserAnimationsModule,FileUploadModule,HttpClientModule, SimpleNotificationsModule.forRoot(),
   ],
-  exports: [MyLibComponent,LeaseYearlyBidPlanComponent,LeaseReadyForBidComponent,LeaseBidComponent,
-    BidDetailComponent,PlanDetailComponent
+  exports: [MyLibComponent,LeaseYearlyBidPlanComponent,ReturnCpioComponent,LeaseReadyForBidComponent,LeaseBidComponent,
+    BidDetailComponent,PlanDetailComponent,BidResultComponent
   ]
 })
 export class MyLibModule { }

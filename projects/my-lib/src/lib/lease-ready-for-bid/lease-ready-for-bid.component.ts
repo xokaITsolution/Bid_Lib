@@ -3,6 +3,29 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MyLibService } from '../my-lib.service';
 import { NotificationsService } from 'angular2-notifications';
 
+class BidGrouping {
+  // Function to group bids by title_Deed_No and merge duplicates
+  groupBidsByTitleDeedNo(bidDetails: any[]): any[] {
+    const groupedMap: Map<string, any> = new Map();
+
+    // Group and merge records by title_Deed_No
+    for (const bid of bidDetails) {
+      const titleDeedNo = bid.title_Deed_No;
+
+      if (!groupedMap.has(titleDeedNo)) {
+        groupedMap.set(titleDeedNo, bid);
+      } else {
+        // If already exists, merge records or handle as needed
+        // This will replace the previous record with the current one
+        // Adjust this logic if you want to merge data differently
+        groupedMap.set(titleDeedNo, { ...groupedMap.get(titleDeedNo)!, ...bid });
+      }
+    }
+
+    // Convert Map to array
+    return Array.from(groupedMap.values());
+  }
+}
 @Component({
   selector: 'lib-lease-ready-for-bid',
   templateUrl: './lease-ready-for-bid.component.html',
@@ -14,6 +37,7 @@ export class LeaseReadyForBidComponent implements OnInit {
   @Input()  license_service: any;
   isDone: boolean;
   highlighted
+  Form=false
   displayDeed:boolean
   displayplan:boolean
   yearlyBidPlans: any;
@@ -22,6 +46,7 @@ export class LeaseReadyForBidComponent implements OnInit {
   License: string;
   approve: boolean;
   Plan_No: any;
+  Guid: any;
   constructor(
     private sanitizer: DomSanitizer,
   private apiService:MyLibService,private notificationsService: NotificationsService,) { }
@@ -30,7 +55,7 @@ export class LeaseReadyForBidComponent implements OnInit {
     plan_ID: null,
     title_Deed_No: '',
     cerficate_ID: 0,
-    is_Active: false,
+    is_Active: true,
     created_By: '',
     date: '',
     updated_By: '',
@@ -40,6 +65,10 @@ export class LeaseReadyForBidComponent implements OnInit {
 
   leaseReadyForBids: LeaseReadyForBid[] = [];
   ngOnInit(): void {
+
+    this.Guid=generateGuid()
+      console.log('Guid:',this.Guid);
+    
     this.getDeptSusp()
     this.apiService.getUserName().subscribe((res:any)=>{
       console.log('logUser',res);
@@ -75,6 +104,7 @@ export class LeaseReadyForBidComponent implements OnInit {
       const toast =
       this.notificationsService.success("Sucess Ready Lease Saved");
       this.getReadyLease(this.plan_id)
+      this.Form=false
     },
     (error) => {
       console.log(error);
@@ -94,6 +124,7 @@ export class LeaseReadyForBidComponent implements OnInit {
       this.leaseReadyForBids=Ready_Lease
       console.log(' this.leaseReadyForBids', this.leaseReadyForBids);
       
+      
     })
   }
   resetForm() {
@@ -102,7 +133,7 @@ export class LeaseReadyForBidComponent implements OnInit {
       plan_ID: null,
       title_Deed_No: '',
       cerficate_ID: null,
-      is_Active: false,
+      is_Active: true,
       created_By: '',
       date: '',
       updated_By: '',
@@ -125,7 +156,10 @@ this.leaseReadyForBid.cerficate_ID=app.certificate_Version_No
   }
   getDeptSusp(){
     this.apiService.getDeptSuspension().subscribe((suspended:any)=>{
-      this.suspended=suspended
+      // this.suspended=suspended
+      const bidGrouping = new BidGrouping();
+      this.suspended  = bidGrouping.groupBidsByTitleDeedNo(suspended);
+// console.log('Grouped Bids:',this.suspended);
       console.log('this.suspended',this.suspended);
       
     })
@@ -141,6 +175,7 @@ this.leaseReadyForBid.cerficate_ID=app.certificate_Version_No
       const toast =
       this.notificationsService.success("Sucess updated");
       this.getReadyLease(this.plan_id)
+      this.Form=false
     },
     (error) => {
       console.log(error);

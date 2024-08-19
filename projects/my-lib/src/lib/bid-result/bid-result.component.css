@@ -1,0 +1,36 @@
+.ui-state-highlight {
+    background:  rgb(13, 34, 75) !important;
+    color: white;
+  }
+  .custom-tree {
+    width: 500px; /* Set your desired width */
+  }
+  
+  .tree-container {
+    width: 500px; /* Set your desired width */
+  }
+  .note-container {
+    display: flex;           /* Flexbox to center the box */
+    justify-content: center; /* Center horizontally */
+    margin-top: 20px;        /* Add some space above the box */
+  }
+  
+  .note-box {
+    background-color: #ffefc1;
+    border: 2px solid #f7c200;
+    border-radius: 8px;
+    padding: 20px;
+    width: 50%;              /* Adjust width to be smaller */
+    max-width: 600px;        /* Maximum width to avoid being too wide */
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(220, 9, 9, 0.1);
+  }
+  
+  .note-text {
+    font-size: 24px;
+    font-weight: bold;
+    color: #da0a0a;
+    line-height: 1.5;
+  }
+  
+  

@@ -20,6 +20,7 @@ interface YearlyBidPlan {
   approved_by: string;
   is_published: boolean;
   min_bid_Plot: number;
+  customer_Type_ID: number;
 }
 
 @Component({
@@ -52,10 +53,12 @@ export class LeaseYearlyBidPlanComponent {
     prepared_by: '',
     approved_by: '',
     is_published: false,
-    min_bid_Plot: 0
+    
+    min_bid_Plot: 0,customer_Type_ID:0
   };
   BuildingUseLookup: any;
   LandUseLookup: any;
+  Form=false
   tab1;
   tab2;
   selectedTab = 0;
@@ -77,6 +80,9 @@ export class LeaseYearlyBidPlanComponent {
   datafromchild: any;
   License: string;
   approve: boolean;
+  CustomerTypeLookUPlist: any;
+  enableCustType: boolean;
+  Application_Number: any;
   constructor(
     private sanitizer: DomSanitizer,  private activatedRoute: ActivatedRoute,
   private apiService:MyLibService,private notificationsService: NotificationsService,) { }
@@ -95,22 +101,30 @@ export class LeaseYearlyBidPlanComponent {
     this.userName  = this.apiService.getUsername();
     this.subcity=this.apiService.getSubcity();
     this.License=this.apiService.getLicense();
-    if(this.License!=null || this.License!=undefined){
+    this.activatedRoute.params.subscribe((params: Params) => {
+      console.log('paramsss',params);
+      this.formcode=params.formcode
+      this.taskid=params.tskID
+      this.Application_Number=params.AppNo
+      this.service_id=params.SDP_ID
+    })
+    if(this.taskid=='22ab43a1-a7da-4289-b647-e0db9ebf7b16'){
       this.approve=true
       this.apiService.getPlan_DetailById(this.License).subscribe((res:any)=>{
         this.plan_id=res.procPlan_Details[0].plan_Detail_ID
         this.getView_Yearly_Bid_Plan(this.plan_id)
       })
-    }else{
+    }else  if(this.taskid=='0eaf07c4-7d1d-4edb-9c1c-b428b5ca0b49' && this.Application_Number!=undefined||this.Application_Number!=null){
+      this.approve=true
+      this.apiService.getPlan_DetailById(this.License).subscribe((res:any)=>{
+        this.plan_id=res.procPlan_Details[0].plan_Detail_ID
+        this.getView_Yearly_Bid_Plan(this.plan_id)
+      })
+    } else if(this.taskid=='0eaf07c4-7d1d-4edb-9c1c-b428b5ca0b49' && this.Application_Number!=undefined||this.Application_Number!=null){
       this.approve=false
     }
     console.log('userNameuserName',this.usernamefromser,this.userName,this.subcity,this.License);
-    this.activatedRoute.params.subscribe((params: Params) => {
-      console.log('paramsss',params);
-      this.formcode=params.formcode
-      this.taskid=params.tskID
-      this.service_id=params.SDP_ID
-    })
+   
     if (this.subcity == "arada") {
       this.SDP_ID = "6921d772-3a1c-4641-95a0-0ab320bac3e2";
     } else if (this.subcity == "bole") {
@@ -154,12 +168,14 @@ export class LeaseYearlyBidPlanComponent {
       is_publiched: new FormControl(false),
       start_TimeEn:new FormControl(),
       opening_TimeEn:new FormControl(),
-      end_Time:new FormControl()
+      end_Time:new FormControl(),
+      customer_Type_ID:new FormControl(),
     });
     this.markFormControlsTouched(this.yearlyBidPlanForm);
     this.getBid_type() 
     this.getView_propertyUse()
     this.getPlotLandUseLookUP()
+    this.getCustomerTypeLookUP()
     // this.yearlyBidPlan.bid_Type = '9de9b9ab-34c3-4daf-a1a6-82d32c8b94ae';
     // this.yearlyBidPlan.bid_Type = String(this.yearlyBidPlan.bid_Type);
     // this.BidTypeLookup = this.BidTypeLookup.map(b => ({ ...b, bid_Type_Id: String(b.bid_Type_Id) }));
@@ -184,6 +200,60 @@ export class LeaseYearlyBidPlanComponent {
         this.markFormControlsTouched(control);
       }
     });
+  }
+  onChange(e: any) {
+    console.log("eeeeeee", e.target.value);
+    if(e.target.value==3102 || e.target.value==null || e.target.value==4112){
+      // this.plc=true
+    }
+    else{}
+    // this.plc=false
+    //   if(e.target.value=='1' || e.target.value=='2' || e.target.value=='3'){
+    //     this.serviceService.showcustomerr=true
+    //   }
+    //   else {
+
+    //   this.serviceService.showcustomerr=false
+    // }
+  }
+  onBidTypeChange(e: any) {
+    console.log("eBidtype", e.target.value);
+    if(e.target.value=='517ad0a5-15ca-4f63-a331-af2d2c4ba63e'){
+      this.enableCustType=true
+    }
+    else
+    {
+
+      this.enableCustType=false
+    }
+    //   if(e.target.value=='1' || e.target.value=='2' || e.target.value=='3'){
+    //     this.serviceService.showcustomerr=true
+    //   }
+    //   else {
+
+    //   this.serviceService.showcustomerr=false
+    // }
+  }
+  getCustomerTypeLookUP() {
+    this.apiService.getCustomer_type().subscribe(
+      (CustomerTypeLookUP: any) => {
+        this.CustomerTypeLookUPlist = CustomerTypeLookUP.customer_type;
+        // this.CustomerTypeLookUPlist = Object.assign(
+        //   [],
+        //   this.CustomerTypeLookUPlist.list
+        // );
+        //  this.CustomerTypeLookUP.list.filter(
+        //    (item) => item.Customer_Type_ID !== 0
+        //  );
+        console.log(
+          "CustomerTypeLookUP",
+          this.CustomerTypeLookUPlist
+        );
+      },
+      (error: any) => {
+        console.log("error");
+      }
+    );
   }
 //   submitForm() {
 //     this.apiService.inseetLease_Yearly_Bid_Plan(this.yearlyBidPlan).
@@ -236,7 +306,7 @@ this.datafromchild=data
     
   }
   submitForm() {
-  
+    
     const opening_Date= combineDate(this.yearlyBidPlanForm.get('bid_Opning_Date').value,
     this.yearlyBidPlanForm.get('opening_TimeEn').value)
     const start_date= combineDate(this.yearlyBidPlanForm.get('bid_Start_Date').value,
@@ -256,12 +326,14 @@ this.datafromchild=data
     console.log('ppppp',this.yearlyBidPlanForm.value,this.yearlyBidPlanForm.get('bid_Opning_Date').value,this.opening_TimeEn);
     
     // if (this.yearlyBidPlanForm.valid) {
-    this.apiService.inseetLease_Yearly_Bid_Plan(this.yearlyBidPlanForm.value).
-    subscribe((res:any)=>{
-      const toast =
-      this.notificationsService.success("Sucess Saved Yearly Plan");
-      this.isDone=true
-      this.getView_Yearly_Bid_Plan(this.plan_id)
+      this.apiService.inseetLease_Yearly_Bid_Plan(this.yearlyBidPlanForm.value).
+      subscribe((res:any)=>{
+        const toast =
+        this.notificationsService.success("Sucess Saved Yearly Plan");
+        this.isDone=true
+        
+        this.getView_Yearly_Bid_Plan(this.plan_id)
+        this.Form=false
       // this.passedData={
       //   docid:docid,
       //   fomcode:this.formcode,
@@ -293,7 +365,7 @@ submitPlanApplication(){
     '00000000-0000-0000-0000-000000000000',
     this.service_id,
     this.taskid,
-    '6921d772-3a1c-4641-95a0-0ab320bac3e2',
+    this.SDP_ID,
     JSON.stringify({}),
     this.DocID ? this.DocID : '00000000-0000-0000-0000-000000000000',
     this.todoID ? this.todoID : '00000000-0000-0000-0000-000000000000',
@@ -392,11 +464,11 @@ SubmitForDeedSelectTask( appno,docid) {
   });
 }
   getView_propertyUse(){
-    this.apiService.getView_propertyUse().subscribe((Building_Use:any)=>{
+    this.apiService.getPropertyUse().subscribe((Building_Use:any)=>{
      
         console.log('API Response:', Building_Use);
-        this.BuildingUseLookup = Building_Use;
-        console.log('Processed BidTypeLookup:', this.BuildingUseLookup);
+        this.BuildingUseLookup = Building_Use.property_use;
+        console.log('Processed BidTypeLookup:1', this.BuildingUseLookup);
       },
       (error) => {
         console.error('Error fetching bid types:', error);
@@ -438,6 +510,7 @@ SubmitForDeedSelectTask( appno,docid) {
       const toast =
       this.notificationsService.success("Sucess updated Yearly Plan");
       this.getView_Yearly_Bid_Plan(this.plan_id)
+      this.Form=false
     },
     (error) => {
       console.log(error);
@@ -493,7 +566,11 @@ SubmitForDeedSelectTask( appno,docid) {
       min_bid_Plot: plan.min_bid_Plot,
       is_publiched: plan.is_publiched
     });
-  
+  if(this.yearlyBidPlanForm.get('bid_Type').value=='517ad0a5-15ca-4f63-a331-af2d2c4ba63e'){
+    this.enableCustType=true
+  }else{
+    this.enableCustType=false
+  }
     console.log('  this.yearlyBidPlan.bid_Type', plan);
     this.isEdit = true;
   }
@@ -508,6 +585,9 @@ SubmitForDeedSelectTask( appno,docid) {
   addNew(){
     this.isEdit=false
     this.yearlyBidPlanForm.reset()
+    this.yearlyBidPlanForm.patchValue({
+      plan_Detail_Id:this.plan_id
+    })
     this.yearlyBidPlan= {
       plan_ID: null,
       year: 0,
@@ -522,7 +602,7 @@ SubmitForDeedSelectTask( appno,docid) {
       prepared_by: '',
       approved_by: '',
       is_published: false,
-      min_bid_Plot: 0
+      min_bid_Plot: 0,customer_Type_ID:0
     }; 
   }
 }

@@ -9,8 +9,12 @@ export class MyLibService {
   private bpelApiUrl = 'http://197.156.93.110//XOKA.eoffice.bpel_land/api/'
    private apiUrl = 'http://197.156.93.110/Land_BID_Api/api/';
   private PlotLandUseLookUP = this.bpelApiUrl + "Plot_Type_Of_Use_Lookup";
+  private CustomerTypeLookUP = this.bpelApiUrl + "Customer_Type_Lookup"; 
         private Lease_Bid = this.apiUrl + 'Lease_Bid/procLease_Bid';
+        private Customer_type = this.apiUrl + 'Customer_type/Customer_type';
         private Bid_Result = this.apiUrl + 'Bid_Result/procBid_Result';
+        private proc_View_Bid_Result = this.apiUrl + 'proc_View_Bid_Result/proc_View_Bid_Result';
+        private to_do_list_Update = this.apiUrl + 'Bid_License_Service/procBid_License_Service/to_do_list_Update';
         private Bid_Detail = this.apiUrl + 'Bid_Detail/procBid_Detail';
         private SaveDataURL = this.bpelApiUrl + "BPEL/SaveData";
         private License_ServiceURL = this.bpelApiUrl + "License_Service";
@@ -24,12 +28,17 @@ export class MyLibService {
         private Lease_bid_Award = this.apiUrl + 'Lease_bid_Award/procLease_bid_Award';
         private Lease_Yearly_Bid_Plan = this.apiUrl + 'Lease_Yearly_Bid_Plan/procLease_Yearly_Bid_Plan';
         private View_propertyUse = this.apiUrl + "view/View_propertyUse";
+        private Property_use = this.apiUrl + "Property_use/Property_use";
         private View_Bid_Type = this.apiUrl + "view/View_Bid_Type";
+        private View_Bid_Result_Status = this.apiUrl + "view/View_Bid_Result_Status";
         private View_Yearly_Bid_Plan = this.apiUrl + "view/View_Yearly_Bid_Plan";
+        private View_Bid_Detail_For_PublicMatser = this.apiUrl + "view/View_Bid_Detail_For_PublicMatser";
+        private View_Yearly_Bid_PlanMaster = this.apiUrl + "view/View_Yearly_Bid_PlanMaster";
         private View_Lease_Bid = this.apiUrl + "view/View_Lease_Bid";
         private nextTaskCompleteURL = this.bpelApiUrl + "BPEL/nextTaskComplete"; 
         private View_Lease_Ready_For_Bid = this.apiUrl + "view/View_Lease_Ready_For_Bid";
         private View_Debt_Suspenstion = this.apiUrl + "view/View_Debt_Suspenstion";
+        private View_Bid_Result = this.apiUrl + "view/View_Bid_Result";
         private userName="@HttpContext.Current.User.Identity.Name"
         private imagepath = '<button type="button" class="trigger">' +
             '<img src="http://job.xokait.com.et/datepicker/img/calendar.gif" alt="Popup"></button>';
@@ -148,11 +157,20 @@ getGregorianToEthiopianDateE(year,month,day,hour,min,sec){
   getBid_type(){
      return this.http.get(this.View_Bid_Type)
   }
+  getBidResStatusLookUP(){
+    return this.http.get(this.View_Bid_Result_Status)
+ }
   getView_Yearly_Bid_Plan(){
     return this.http.get(this.View_Yearly_Bid_Plan)
   }
+  getView_Yearly_Bid_PlanMaster(){
+    return this.http.get(this.View_Yearly_Bid_PlanMaster)
+  }
   getView_Yearly_Bid_PlanById(id){
     return this.http.get(this.View_Yearly_Bid_Plan+'/Plan_Detail_Id?Plan_Detail_Id='+id)
+  }
+  getView_Yearly_Bid_PlanMasterById(id){
+    return this.http.get(this.View_Yearly_Bid_PlanMaster+'/Plan_Detail_Id?Plan_Detail_Id='+id)
   }
 getView_Lease_Ready_For_Bid(){
   return this.http.get(this.View_Lease_Ready_For_Bid)
@@ -169,6 +187,17 @@ getBid_Detail(){
 getBid_DetailById(id){
   return this.http.get(this.Bid_Detail+'/'+id)
 }
+getView_Bid_Result(Bid_No,titledeed) :Observable<any>
+{
+  return this.http.get(this.View_Bid_Result+'/Bid_No?Bid_No='+Bid_No+'&Title_Deed_No='+titledeed)
+}
+getView_Bid_ResultByBidNo(Bid_No){
+  return this.http.get(this.View_Bid_Result+'/Bid_No/'+Bid_No)
+}
+getView_Bid_ResultByPlan(Plan_Id){
+  return this.http.get(this.View_Bid_Result+'/Plan/Plan_Detail_ID/'+Plan_Id)
+}
+
 insertBid_Detail(data){
   return this.http.post(this.Bid_Detail,data)
 }
@@ -240,11 +269,47 @@ deletePlan_Detail(id){
 updateBid_Detail(data){
   return this.http.put(this.Bid_Detail,data)
 }
+getBid_Result(){
+  return this.http.get(this.Bid_Result)
+}
+getBid_ResultById(id){
+  return this.http.get(this.Bid_Result+'/'+id)
+}
+insertBid_Result(data){
+  return this.http.post(this.Bid_Result,data)
+}
+updateBid_Result(data){
+  return this.http.put(this.Bid_Result,data)
+}
+getproc_View_Bid_Result(plan_id,bid_no,title_deed_no){
+  return this.http.get(this.proc_View_Bid_Result+'/'+plan_id+'?Bid_No='+bid_no+'&Title_Deed_No='+title_deed_no)
+}
+getCustomerTypeLookUP() {
+  return this.http.get(
+    this.CustomerTypeLookUP +
+      "?" +
+      "sortOrder=test&currentFilter&searchString&pageIndex&pageSize"
+  );
+}
+getCustomer_type() {
+  return this.http.get(
+    this.Customer_type 
+  );
+}
+updateTodoList(data){
+  return this.http.put(this.to_do_list_Update,data)
+}
+deleteBid_Result(id){
+  return this.http.delete(this.Bid_Result+'/'+id)
+}
 getDeptSuspension(){
   return this.http.get(this.View_Debt_Suspenstion)
 }
 getView_propertyUse(){
   return this.http.get(this.View_propertyUse)
+}
+getPropertyUse(){
+  return this.http.get(this.Property_use)
 }
 getPlotLandUseLookUP() {
   return this.http.get(

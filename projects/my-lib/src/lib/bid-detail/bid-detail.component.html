@@ -1,6 +1,6 @@
 <p-tabView  (onChange)="tabChanged($event)" [(activeIndex)]="selectedTab" selected="true">
   <p-tabPanel header="Lease Bid">
-  <lib-lease-bid [license_service]="license_service" (next)="Next($event)"></lib-lease-bid>  
+  <lib-lease-bid [license_service]="license_service" (done)="done()" (next)="Next($event)"></lib-lease-bid>  
  
   </p-tabPanel>
   <p-tabPanel header="Bid Detail" [disabled]="true">
@@ -9,7 +9,7 @@
         Bid Detail Form
       </div>
       <div class="card-body">
-        <form #bidDetailForm="ngForm" >
+        <form #bidDetailForm="ngForm" *ngIf="!IsPosted">
           <div class="row">
             <div class="col-md-6 mb-3">
               <label for="bidNo" class="form-label">Bid No</label>
@@ -20,22 +20,22 @@
               <input type="text" readonly (click)="displayReadyLease=true" class="form-control" id="titleDeedNo" name="titleDeedNo" [(ngModel)]="bidDetail.title_Deed_No" required>
             </div>
           </div>
-          <div class="row">
+          <div class="row"> 
             <!-- <div class="col-md-6 mb-3">
               <label for="certificateNo" class="form-label">Certificate No</label>
               <input type="text" class="form-control" id="certificateNo" name="certificateNo" [(ngModel)]="bidDetail.certificate_No" required>
             </div> -->
             <div class="col-md-6 mb-3">
               <label for="totalMinBidPrice" class="form-label">Total Min Bid Price</label>
-              <input type="number" class="form-control" id="totalMinBidPrice" name="totalMinBidPrice" [(ngModel)]="bidDetail.total_Min_Bid_Price" required>
+              <input type="number" disabled class="form-control" id="totalMinBidPrice" name="totalMinBidPrice" [(ngModel)]="bidDetail.total_Min_Bid_Price" required>
             </div>
             <div class="col-md-6 mb-3">
               <label for="size" class="form-label">Size</label>
-              <input type="number" class="form-control" id="size" name="size" [(ngModel)]="bidDetail.size" required>
+              <input type="number" disabled class="form-control" id="size" name="size" [(ngModel)]="bidDetail.size" required>
             </div>
             <div class="col-md-6 mb-3">
               <label for="bidder_Capacity_In_Birr" class="form-label">Bider Capacity In Birr</label>
-              <input type="number" class="form-control" id="bidder_Capacity_In_Birr" name="bidder_Capacity_In_Birr" [(ngModel)]="bidDetail.bidder_Capacity_In_Birr" required>
+              <input type="number" disabled class="form-control" id="bidder_Capacity_In_Birr" name="bidder_Capacity_In_Birr" [(ngModel)]="bidDetail.bidder_Capacity_In_Birr" required>
             </div>
           </div>
           <div class="row"> 

@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MyLibService } from '../my-lib.service';
 import { NotificationsService } from 'angular2-notifications';
+import { ActivatedRoute, Params } from '@angular/router';
 
 @Component({
   selector: 'lib-lease-bid',
@@ -12,6 +13,7 @@ export class LeaseBidComponent implements OnInit {
   mimeType: any;
   fileupload: string;
   @Output() next = new EventEmitter();
+  @Output() done = new EventEmitter();
   highlighted;
   @Input()  license_service: any;
   uploadedDocumnet: boolean;
@@ -21,6 +23,7 @@ export class LeaseBidComponent implements OnInit {
   leaseBids: any;
   displayplan:boolean
   yearlyBidPlans:any
+  Form=false
   isEdit: boolean;
   isDone: boolean;
   opening_TimeEn: string;
@@ -37,8 +40,12 @@ export class LeaseBidComponent implements OnInit {
   isValidGrade: boolean=false;
   paymenteGrade = 40;
   priceGrade = 60;
+  formcode: any;
+  taskid: any;
+  service_id: any;
+  IsPosted: boolean;
   constructor(private notificationsService: NotificationsService,
-    private sanitizer: DomSanitizer,
+    private sanitizer: DomSanitizer,private activatedRoute: ActivatedRoute,
   private apiService:MyLibService) { }
   formData = {
     bid_No: null,
@@ -53,22 +60,26 @@ export class LeaseBidComponent implements OnInit {
     opening_Date: '',
     closeding_Date: '',
     opining_Date_ET: null,
-    closeding_Date_ET: ''
+    closeding_Date_ET: '',
+    is_Posted:null
   };
   
   submitForm() {
     // Handle form submission logic here
     this.formData.adnace_Payment_grad= this.paymenteGrade/100
-    this.formData.bid_prices_graid= this.paymenteGrade/100
+    this.formData.bid_prices_graid= this.priceGrade/100
     this.formData.closeding_Date=combineDate(this.formData.closeding_Date,this.closing_TimeEn)
     this.formData.opening_Date=combineDate(this.formData.opening_Date,this.opening_TimeEn)
     this.formData.closeding_Date_ET=combineDate(this.formData.closeding_Date_ET,this.closing_TimeET)
     this.formData.opining_Date_ET=combineDate(this.formData.opining_Date_ET,this.opening_TimeET)
 
 this.apiService.insertLease_Bid(this.formData).subscribe((res:any)=>{
+  this.formData.bid_No=res[0].bid_No
+  
   const toast =
   this.notificationsService.success("Sucess Ready Lease Saved");
   this.fetchData(this.plan_id)
+  this.Form=false
   // this.addNew()
 },
 (error) => {
@@ -86,13 +97,24 @@ this.apiService.insertLease_Bid(this.formData).subscribe((res:any)=>{
   ngOnInit() {
     this.getBid_type()
     // this.getLicenseService(this.license_service)
-    this.fetchData(this.plan_id)
     this.License=this.apiService.getLicense();
     if(this.License!=null || this.License!=undefined){
       this.approve=true
       this.apiService.getPlan_DetailById(this.License).subscribe((res:any)=>{
         this.plan_id=res.procPlan_Details[0].plan_Detail_ID
         this.getView_Yearly_Bid_Plan(this.plan_id)
+        this.fetchData(this.plan_id)
+        this.activatedRoute.params.subscribe((params: Params) => {
+          console.log('paramsss',params);
+          this.formcode=params.formcode
+          this.taskid=params.tskID
+          this.service_id=params.SDP_ID
+          if (this.taskid=='7590b7c4-54cd-43d7-b887-9f0c520ad17a'){
+          this.IsPosted=false
+        }else if(this.taskid=='08d1e87b-e2a5-4cee-9d47-b1106590418b'){
+        this.IsPosted=true
+        }}
+        )
       })
     }else{
       this.approve=false
@@ -119,7 +141,7 @@ this.apiService.insertLease_Bid(this.formData).subscribe((res:any)=>{
     );
   }
   getView_Yearly_Bid_Plan(plan_id){
-    this.apiService.getView_Yearly_Bid_PlanById(plan_id).subscribe((View_Yearly_Bid_Plan:any)=>{
+    this.apiService.getView_Yearly_Bid_PlanMasterById(plan_id).subscribe((View_Yearly_Bid_Plan:any)=>{
       this.yearlyBidPlans=View_Yearly_Bid_Plan
       console.log('yearlyBidPlans',this.yearlyBidPlans);
       
@@ -156,6 +178,8 @@ const paymenteGrade=Number(this.paymenteGrade)
     this.displayplan=false
     // this.plan_id=plan.year
     this.Plan_No=plan.plan_No
+    this.paymenteGrade=plan.lease_Payment_Advance_Per*100
+    this.priceGrade=100-this.paymenteGrade
     
     this.formData.bid_Plan_ID=plan.plan_ID
     this.formData.bid_Type=plan.bid_Type
@@ -219,7 +243,19 @@ console.log('this.formData.closeding_Date',this.formData.closeding_Date);
   }
   onODateTimeChange() {
     if (this.formData.opening_Date && this.opening_TimeEn) {
-      const combinedDateTime = `${this.formData.opening_Date}T${this.opening_TimeEn}:00`;
+      // const combinedDateTime = `${this.formData.opening_Date}T${this.opening_TimeEn}:00`;
+      const openingDate = this.formData.opening_Date;
+      const openingTime = this.opening_TimeEn;
+    
+      // Create a new Date object using the local time
+      const dateParts1 = openingDate.split('-').map(Number); // [year, month, day]
+      const timeParts1 = openingTime.split(':').map(Number); // [hours, minutes]
+    
+      // JavaScript months are 0-based, so subtract 1 from the month
+      const localDateTime = new Date(dateParts1[0], dateParts1[1] - 1, dateParts1[2], timeParts1[0], timeParts1[1]);
+    
+      // Format the combined date and time as an ISO string
+      const combinedDateTime = localDateTime.toISOString().slice(0, 19);
       console.log('combinedDateTime',combinedDateTime);
       const [datePart, timePart] = combinedDateTime.split('T');
       const dateParts= datePart.split('-');
@@ -235,7 +271,7 @@ console.log('this.formData.closeding_Date',this.formData.closeding_Date);
         const splitETime=res.NowTime.split(' ')
         const splitETimes=splitETime[0]
         const merged=res.NowDate+'T'+splitETimes
-        console.log('plan.bid_Enddate',res.NowDate+'T'+splitETimes);
+        console.log('plan.bid_Enddate',res.NowDate+'T'+splitETimes,combinedDateTime,res.NowTime);
         
        const extractOpenDateEt=extractDateTime(merged)
        this.formData.opining_Date_ET=extractOpenDateEt.date
@@ -247,6 +283,7 @@ console.log('this.formData.closeding_Date',this.formData.closeding_Date);
     this.formData.adnace_Payment_grad= this.paymenteGrade/100
     this.formData.bid_prices_graid= this.priceGrade/100
     this.formData.closeding_Date=combineDate(this.formData.closeding_Date,this.closing_TimeEn)
+    
     this.formData.opening_Date=combineDate(this.formData.opening_Date,this.opening_TimeEn)
     this.formData.closeding_Date_ET=combineDate(this.formData.closeding_Date_ET,this.closing_TimeET)
     this.formData.opining_Date_ET=combineDate(this.formData.opining_Date_ET,this.opening_TimeET)
@@ -255,6 +292,7 @@ console.log('this.formData.closeding_Date',this.formData.closeding_Date);
       const toast =
       this.notificationsService.success("Sucess Ready Lease Updated");
       this.fetchData(this.plan_id)
+      this.Form=false
       // this.addNew()
     },
     (error) => {
@@ -270,8 +308,8 @@ console.log('this.formData.closeding_Date',this.formData.closeding_Date);
   }
   fetchData(plan_id){
     this.apiService.
-    // getView_Lease_BidByPlanDetial(plan_id)
-    getView_Lease_Bid()
+    getView_Lease_BidByPlanDetial(plan_id)
+    // getView_Lease_Bid()
     .subscribe((Lease_bid:any)=>{
       this.leaseBids=Lease_bid
       console.log('this.leaseBids',this.leaseBids,Lease_bid);
@@ -312,8 +350,8 @@ console.log('this.formData.closeding_Date',this.formData.closeding_Date);
        this.opening_TimeET=extractedOeningEt.time
     }
   }
-  done(){
-    // this.completed.emit()
+  Done(){
+    this.done.emit()
   }
   Next(){
 this.next.emit(this.formData)
@@ -341,7 +379,8 @@ this.next.emit(this.formData)
       opening_Date: '',
       closeding_Date: '',
       opining_Date_ET: '',
-      closeding_Date_ET: ''
+      closeding_Date_ET: '',
+      is_Posted:null
     };
     this.closing_TimeET=''
     this.opening_TimeET=''
@@ -421,6 +460,9 @@ this.next.emit(this.formData)
              console.error(e);
            }
   }
+
+
+
 }
 function extractDateTime(dateTime) {
   if (dateTime) {

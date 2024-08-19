@@ -1,4 +1,4 @@
-<div class="card" style="max-width: 600px; margin: auto;">
+<div class="card" style="max-width: 600px; margin: auto;" *ngIf="Form">
     <div class="card-header">
       Lease Ready for Bid Form
     </div>
@@ -28,7 +28,7 @@
             <input type="number" class="form-control" id="certificateID" name="certificateID" [(ngModel)]="leaseReadyForBid.certificate_ID" required>
           </div> -->
           <div class="col-md-6 mb-3">
-            <label for="date" class="form-label">Date</label>
+            <label for="date" class="form-label">Registered Date</label>
             <input type="date" class="form-control" id="date" name="date" [(ngModel)]="leaseReadyForBid.date" required>
           </div>
         </div>
@@ -59,8 +59,7 @@
             translate>Update</button>
         </div>
         <div style="float: right;">
-          <button (click)="done()" type="button" [disabled]="!isDone" class="btn btn-primary mr-1" 
-          translate>Done</button>
+        
         </div>
       </form>
     </div>
@@ -70,8 +69,10 @@
     
     <div class="card-body">
       <div style="float: right;">
-        <button  type="button" class="btn btn-primary mr-1" 
-          translate (click)="addNew()">Add New</button>
+        <button (click)="done()"  type="button" [disabled]="!isDone" class="btn btn-primary mr-1" 
+        translate>Done</button>
+        <button  type="button" [hidden]="Form" class="btn btn-primary mr-1" 
+          translate (click)="addNew();Form=true">Add New</button>
       </div><br><br>
       <p-table [value]="leaseReadyForBids" [paginator]="true" [rows]="5">
         <ng-template pTemplate="header">
@@ -84,7 +85,7 @@
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-bid let-rowData>
-          <tr (click)='highlighted = rowData;onRowSelect(bid)' class="some-class" tabindex="1"  [class.ui-state-highlight]="rowData === highlighted">
+          <tr (click)='highlighted = rowData;onRowSelect(bid);Form=true' class="some-class" tabindex="1"  [class.ui-state-highlight]="rowData === highlighted">
             <!-- <td>{{ bid.year }}</td> -->
             <td>{{ bid.title_Deed_No }}</td>
             <!-- <td>{{ bid.certificate_ID }}</td> -->
